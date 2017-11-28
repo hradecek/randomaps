@@ -1,0 +1,57 @@
+package com.hradecek.maps.config;
+
+import io.reactivex.Single;
+import io.vertx.config.ConfigRetrieverOptions;
+import io.vertx.config.ConfigStoreOptions;
+import io.vertx.core.json.JsonObject;
+import io.vertx.reactivex.config.ConfigRetriever;
+import io.vertx.reactivex.core.Vertx;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+/**
+ * TODO:
+ *
+ * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
+ */
+public class AppConfigRetriever {
+
+    /**
+     * Config path. Custom config may be passed via {@code -Dconf} system property.
+     */
+    private static final String CONFIG_PATH = System.getProperty("conf", "conf/config.json");
+
+    /**
+     * Base config retriever
+     */
+    private final ConfigRetriever configRetriever;
+
+    /**
+     * TODO:
+     *
+     * @param vertx Vert.x instance
+     */
+    public AppConfigRetriever(Vertx vertx) {
+        final ConfigRetrieverOptions configRetrieverOptions = new ConfigRetrieverOptions()
+                .addStore(new ConfigStoreOptions().setType("env"))
+                .addStore(new ConfigStoreOptions().setType("sys"));
+        if (Files.exists(Paths.get(CONFIG_PATH))) {
+            configRetrieverOptions.addStore(new ConfigStoreOptions()
+                    .setType("file")
+                    .setFormat("json")
+                    .setConfig(new JsonObject().put("path", CONFIG_PATH)));
+        }
+
+        this.configRetriever = ConfigRetriever.create(vertx, configRetrieverOptions);
+    }
+
+    /**
+     * TODO:
+     *
+     * @return
+     */
+    public Single<JsonObject> config() {
+        return configRetriever.rxGetConfig();
+    }
+}
