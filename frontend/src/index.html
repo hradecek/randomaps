@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AngularGps</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+  <style>
+    #mymap {
+      height:100%;
+    }
+    html, body {
+      height:100%;
+      margin:0;
+      padding:0;
+    }
+  </style>
+  <script src="./assets/vertx-eventbus.js"></script>
+  <script>
+  </script>
+</head>
+<body>
+  <h1>Messages</h1>
+  <div id="mymap"></div>
+  <script>
+    var map;
+    function initMap() {
+      var divMap = document.getElementById("mymap");
+      map = new google.maps.Map(divMap, {
+        zoom: 8,
+        center: {lat: -34.397, lng: 150.644}
+      });
+    }
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var eb = new EventBus('http://localhost:8080/eventbus');
+      eb.onopen = function () {
+        eb.registerHandler('locations', function (err, msg) {
+          var lat = parseFloat(msg.body.lat);
+          var lng = parseFloat(msg.body.lon);
+
+          new google.maps.Marker({
+            position: new google.maps.LatLng({lat: lat, lng: lng}),
+            map: map,
+            animation: google.maps.Animation.BOUNCE
+          });
+          console.log("Adding: " + lat + " " + lng);
+          /* var node = document.createElement("LI");
+           var textNode = document.createTextNode(JSON.stringify(msg.body));
+           node.appendChild(textNode);
+           document.getElementById("messages").appendChild(node); */
+        });
+      }
+    });
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMbdLFtmrKHRTkmhLlOcXi67jHCes4Bu4&callback=initMap" async defer></script>
+  <app-root>Loading...</app-root>
+</body>
+</html>
+
