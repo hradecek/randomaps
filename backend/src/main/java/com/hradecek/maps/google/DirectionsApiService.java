@@ -12,29 +12,51 @@ import io.vertx.core.logging.LoggerFactory;
 import java.io.IOException;
 
 /**
+ * Simple service for Directions API.
+ *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class DirectionsApiService {
 
+    /**
+     * Logger
+     */
     private static Logger logger = LoggerFactory.getLogger(DirectionsApiService.class);
 
+    /**
+     * Geo API Context
+     */
     private final GeoApiContext context;
 
+    /**
+     * Constructor
+     *
+     * @param context
+     */
     public DirectionsApiService(GeoApiContext context) {
         this.context = context;
     }
 
+    /**
+     * Get route from start location to end destination form of encoded polyline.
+     * If there's no route error is emitted.
+     *
+     * @param origin start location
+     * @param destination end location
+     * @return Encoded polyline
+     */
     public Single<EncodedPolyline> getRoute(String origin, String destination) {
         return Single.create(singleEmitter -> {
             try {
                 DirectionsResult result = DirectionsApi.getDirections(context, origin, destination).await();
                 if (result.routes.length <= 0) {
-                    singleEmitter.onError(
-                            new IllegalStateException("No route has been found from " + origin + " to "+  destination));
+                    final String errorMessage = "No route has been found from " + origin + " to "+  destination;
+                    logger.error(errorMessage);
+                    singleEmitter.onError(new DirectionsApiException(errorMessage));
                 }
                 singleEmitter.onSuccess(result.routes[0].overviewPolyline);
             } catch (ApiException | InterruptedException | IOException e) {
-                singleEmitter.onError(e);
+                singleEmitter.onError(new DirectionsApiException(e));
             }
         });
     }

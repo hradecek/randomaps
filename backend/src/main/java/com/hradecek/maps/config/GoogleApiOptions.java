@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 /**
  * TODO:
  *
- * @author <a href="mailto:ivohradeihradek@gmail.com">Ivo Hradek</a>
+ * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class GoogleApiOptions implements ConfigOptions {
 
