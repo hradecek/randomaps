@@ -1,7 +1,4 @@
-# Maven
-/target
-
 # IDE files
-/.idea
+.idea/
 *.iml
 
