@@ -15,7 +15,7 @@ import java.util.Arrays;
  *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
-public class PlacesApiService {
+public class PlacesApiService extends MapApi {
 
     /**
      * Logger
@@ -23,17 +23,12 @@ public class PlacesApiService {
     private static Logger logger = LoggerFactory.getLogger(PlacesApiService.class);
 
     /**
-     * Geo API Context
-     */
-    private final GeoApiContext context;
-
-    /**
      * Constructor
      *
      * @param context GeoApiContext
      */
     public PlacesApiService(GeoApiContext context) {
-        this.context = context;
+        super(context);
     }
 
     /**

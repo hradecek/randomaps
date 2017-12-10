@@ -9,20 +9,31 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
 /**
- * TODO:
+ * Simple service for Roads API.
  *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
-public class RoadsApiService {
+public class RoadsApiService extends MapApi {
 
+    /**
+     * Logger
+     */
     private static Logger logger = LoggerFactory.getLogger(RoadsApiService.class);
 
-    private final GeoApiContext context;
-
+    /**
+     * Constructor
+     *
+     * @param context GeoApiContext
+     */
     public RoadsApiService(GeoApiContext context) {
-        this.context = context;
+        super(context);
     }
 
+    /**
+     *
+     * @param point
+     * @return
+     */
     public Single<SnappedPoint[]> getNearbyRoads(LatLng point) {
         return Single.create(singleEmmiter -> {
             SnappedPoint[] snappedPoints = RoadsApi.nearestRoads(context, point).await();

@@ -16,7 +16,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
-public class DirectionsApiService {
+public class DirectionsApiService extends MapApi {
 
     /**
      * Logger
@@ -24,17 +24,12 @@ public class DirectionsApiService {
     private static Logger logger = LoggerFactory.getLogger(DirectionsApiService.class);
 
     /**
-     * Geo API Context
-     */
-    private final GeoApiContext context;
-
-    /**
      * Constructor
      *
-     * @param context
+     * @param context GeoApiContext
      */
     public DirectionsApiService(GeoApiContext context) {
-        this.context = context;
+        super(context);
     }
 
     /**
