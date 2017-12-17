@@ -1,6 +1,7 @@
 package com.hradecek.maps.google;
 
 import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
 import com.google.maps.RoadsApi;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.SnappedPoint;
@@ -31,16 +32,22 @@ public class RoadsApiService extends MapApi {
 
     /**
      *
-     * @param point
+     * @param location
      * @return
      */
-    public Single<SnappedPoint[]> getNearbyRoads(LatLng point) {
+    public Single<SnappedPoint[]> getNearbyRoads(LatLng location) {
         return Single.create(singleEmmiter -> {
-            SnappedPoint[] snappedPoints = RoadsApi.nearestRoads(context, point).await();
-            if (snappedPoints.length <= 0) {
-                singleEmmiter.onError(new IllegalStateException("No nearby roads have been found"));
-            }
-            singleEmmiter.onSuccess(snappedPoints);
+            RoadsApi.nearestRoads(context, location).setCallback(new PendingResult.Callback<SnappedPoint[]>() {
+                @Override
+                public void onResult(SnappedPoint[] snappedPoints) {
+                    singleEmmiter.onSuccess(snappedPoints);
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    singleEmmiter.onError(new IllegalStateException("No roads have been found near by " + location));
+                }
+            });
         });
     }
 }

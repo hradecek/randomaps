@@ -56,8 +56,8 @@ public class GpsRandom extends Random {
      * @param maxDistance
      * @return
      */
-    public LatLng nextLatLng(LatLng base, double maxDistance) {
-        return nextLatLng(base, maxDistance, nextInt(360));
+    public LatLng nextLatLng(LatLng base, double minDistance, double maxDistance) {
+        return nextLatLng(base, minDistance, maxDistance, nextInt(360));
     }
 
     /**
@@ -67,11 +67,11 @@ public class GpsRandom extends Random {
      * @param bearing
      * @return
      */
-    public LatLng nextLatLng(LatLng base, double maxDistance, double bearing) {
+    public LatLng nextLatLng(LatLng base, double minDistance, double maxDistance, double bearing) {
         final double bearingR = Math.toRadians(bearing);
         final double lat1R = Math.toRadians(base.lat);
         final double lon1R = Math.toRadians(base.lng);
-        final double distanceR = (nextDouble() * maxDistance) / SEMI_MAJOR_AXIS;
+        final double distanceR = (maxDistance - minDistance) / SEMI_MAJOR_AXIS;
 
         final double a = Math.sin(distanceR) * Math.cos(lat1R);
         final double lat2 = Math.asin(Math.sin(lat1R) * Math.cos(distanceR) + a * Math.cos(bearingR));
@@ -79,4 +79,5 @@ public class GpsRandom extends Random {
 
         return new LatLng(Math.toDegrees(lat2), Math.toDegrees(lon2));
     }
+
 }

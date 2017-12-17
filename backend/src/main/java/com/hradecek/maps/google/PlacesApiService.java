@@ -1,6 +1,7 @@
 package com.hradecek.maps.google;
 
 import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlacesSearchResponse;
@@ -38,16 +39,21 @@ public class PlacesApiService extends MapApi {
      * @return All found nearby places GPS coordination
      */
     public Observable<LatLng> nearbyPlaces(LatLng location) {
-        return Observable.create(emitter -> {
-            PlacesSearchResponse response = PlacesApi.nearbySearchQuery(context, location).radius(50_000).await();
-            if (response.results.length <= 0) {
-                final String errorMessage = "No places has been found nearby " + location;
-                logger.error(errorMessage);
-                emitter.onError(new PlacesApiException(errorMessage));
-            }
-            /* TODO: Use nextPageToken for complete list of results */
-            Arrays.stream(response.results).forEach(place -> emitter.onNext(place.geometry.location));
-            emitter.onComplete();
-        });
+        return Observable.create(emitter -> PlacesApi.nearbySearchQuery(context, location).radius(50_000).setCallback(
+                new PendingResult.Callback<PlacesSearchResponse>() {
+                    @Override
+                    public void onResult(PlacesSearchResponse response) {
+                        // TODO: Use nextPageToken for complete list of results
+                        Arrays.stream(response.results).forEach(place -> emitter.onNext(place.geometry.location));
+                        emitter.onComplete();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        final String errorMessage = "No places has been found nearby " + location;
+                        emitter.onError(new PlacesApiException(errorMessage));
+                    }
+                })
+        );
     }
 }
