@@ -1,3 +1,11 @@
-<ul>
-  <li *ngFor="let message of messages">{{message}}</li>
-</ul>
+<div id="controls">
+  <button (click)="randomJourney($event)">Generate Journey</button>
+</div>
+
+<div id="map-container">
+  <agm-map [latitude]="lat" [longitude]="lng">
+    <agm-polyline *ngFor="let polyline of polylines">
+      <agm-polyline-point *ngFor="let point of polyline.polyline" [latitude]="point.lat" [longitude]="point.lng"></agm-polyline-point>
+    </agm-polyline>
+  </agm-map>
+</div>

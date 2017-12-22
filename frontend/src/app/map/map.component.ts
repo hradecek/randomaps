@@ -1,11 +1,28 @@
-import {Component, OnChanges} from '@angular/core';
-const EventBus = require('vertx3-eventbus-client/vertx-eventbus.js');
+import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-map',
-  templateUrl: './map.component.html'
+  templateUrl: './map.component.html',
+  styleUrls: [ './map.component.css' ]
 })
 export class MapComponent {
-  eventBus = new EventBus('http://localhost:8080/eventbus');
-  messages = ["ahoj", "ahoj2", "ahoj3"];
+
+  lat: number;
+  lng: number;
+
+  polylines: Array<any> = [];
+
+  constructor(private client: HttpClient) { }
+
+  randomJourney() {
+    this.client.get('http://localhost:8080/random').subscribe(data => {
+      // Center
+      const start = data['polyline'][0];
+      this.lat = start.lat;
+      this.lng = start.lng;
+
+      this.polylines.push(data);
+    });
+  }
 }

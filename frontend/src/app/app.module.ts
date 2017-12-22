@@ -1,10 +1,12 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AgmCoreModule } from '@agm/core';
 
 import { AppComponent } from './app.component';
-import {MapComponent} from "./map/map.component";
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
@@ -12,11 +14,12 @@ import {MapComponent} from "./map/map.component";
     MapComponent
   ],
   imports: [
-    BrowserModule,
     FormsModule,
-    HttpModule
+    BrowserModule,
+    HttpClientModule,
+    AgmCoreModule.forRoot()
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

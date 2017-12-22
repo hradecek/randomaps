@@ -1,0 +1,21 @@
+#controls {
+  width: 100%;
+  height: 5%;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+
+#map-container {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 95%;
+  position: absolute;
+}
+
+agm-map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
