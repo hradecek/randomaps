@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {EncodedPolyline} from './EncodedPolyline';
+import { EncodedPolyline } from './EncodedPolyline';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-
 
 @Injectable()
 export class MapService {

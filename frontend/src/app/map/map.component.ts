@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { LatLng } from '@agm/core';
 import { EncodedPolyline } from './EncodedPolyline';
 import { MapService } from './map.service';
-import {selector} from "rxjs/operator/publish";
+import {LatLng} from "./LatLng";
 
 @Component({
   selector: 'app-map',
@@ -11,15 +10,19 @@ import {selector} from "rxjs/operator/publish";
 })
 export class MapComponent {
 
-  selectedLocation: LatLng;
-  routes: Array<EncodedPolyline> = [];
+  focusedRoute: LatLng;
+  routes: Array<Array<LatLng>> = [];
 
-  constructor(private mapService: MapService) { }
+  constructor(private mapService: MapService) {
+    this.focusedRoute = new LatLng(48.733333,  18.916667);
+  }
 
   addRandomRoute() {
     this.mapService.randomJourney().subscribe(route => {
-      this.selectedLocation = EncodedPolyline.decode(route.points)[0];
-      this.routes.push(route);
+      const decoded = EncodedPolyline.decode(route.points);
+
+      this.focusedRoute = decoded[0];
+      this.routes.push(decoded);
     });
   }
 }

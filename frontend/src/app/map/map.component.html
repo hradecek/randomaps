@@ -1,5 +1,5 @@
-<agm-map [latitude]="lat" [longitude]="lng">
-  <agm-polyline *ngFor="let polyline of polylines">
-    <agm-polyline-point *ngFor="let point of polyline.polyline" [latitude]="point.lat" [longitude]="point.lng"></agm-polyline-point>
+<agm-map [latitude]="focusedRoute.lat" [longitude]="focusedRoute.lng">
+  <agm-polyline *ngFor="let route of routes">
+    <agm-polyline-point *ngFor="let point of route" [latitude]="point.lat" [longitude]="point.lng"></agm-polyline-point>
   </agm-polyline>
 </agm-map>
