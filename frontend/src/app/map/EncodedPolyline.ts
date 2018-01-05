@@ -2,13 +2,10 @@ import { LatLng } from '@agm/core';
 import * as PolylineUtil from '../../../node_modules/polyline-encoded';
 
 export class EncodedPolyline {
+
   points: string;
 
-  constructor(points: Array<LatLng>) {
-    this.points = this.encode(points);
-  }
-
-  encode(points: Array<LatLng>) {
+  static encode(points: Array<LatLng>): string {
     const latLngs = points.map(latLng => {
       return [latLng.lat, latLng.lng];
     });
@@ -16,7 +13,11 @@ export class EncodedPolyline {
     return PolylineUtil.encode(latLngs);
   }
 
-  decode(): Array<LatLng> {
-    return PolylineUtil.decode(this.points);
+  static decode(points: string): Array<LatLng> {
+    return PolylineUtil.decode(points);
+  }
+
+  constructor(points: Array<LatLng>) {
+    this.points = EncodedPolyline.encode(points);
   }
 }
