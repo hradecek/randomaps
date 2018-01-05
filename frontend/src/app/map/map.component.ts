@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { LatLng } from '@agm/core';
+import { EncodedPolyline } from './EncodedPolyline';
+import { MapService } from './map.service';
 
 @Component({
   selector: 'app-map',
@@ -8,21 +10,15 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MapComponent {
 
-  lat: number;
-  lng: number;
+  selectedLocation: LatLng;
+  routes: Array<EncodedPolyline> = [];
 
-  polylines: Array<any> = [];
+  constructor(private mapService: MapService) { }
 
-  constructor(private client: HttpClient) { }
-
-  randomJourney() {
-    this.client.get('http://localhost:8080/random').subscribe(data => {
-      // Center
-      const start = data['polyline'][0];
-      this.lat = start.lat;
-      this.lng = start.lng;
-
-      this.polylines.push(data);
+  addRandomRoute() {
+    this.mapService.randomJourney().subscribe(route => {
+      this.selectedLocation = route.decode()[0];
+      this.routes.push(route);
     });
   }
 }
