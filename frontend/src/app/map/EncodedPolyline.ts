@@ -1,5 +1,5 @@
 import * as PolylineUtil from '../../../node_modules/polyline-encoded';
-import {LatLng} from "./LatLng";
+import { LatLng } from './LatLng';
 
 export class EncodedPolyline {
 

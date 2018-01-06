@@ -1,14 +1,14 @@
 <mat-toolbar class="header mat-app-background">
-  <button mat-mini-fab (click)="sidenav.toggle()"><mat-icon>more_vert</mat-icon></button>
-  <button mat-button (click)="map.addRandomRoute($event)">Add random route</button>
+  <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+  <button mat-raised-button (click)="map.addRandomRoute($event)">Add random route</button>
 </mat-toolbar>
 
-<mat-sidenav-container class="container">
-  <mat-sidenav #sidenav mode="side" opened="true" class="sidenav">
-    Sidenav
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" opened="false" class="sidenav">
+    <app-route-list #routeList [routes]="map.routes">Loading...</app-route-list>
   </mat-sidenav>
 
-  <app-map #map>Loading...</app-map>
+  <app-map #map [routes]="routeList.routes">Loading...</app-map>
 </mat-sidenav-container>
 
-<mat-toolbar class="footer">FOOTER</mat-toolbar>
+<mat-toolbar class="footer"><p>Source code: <a href="https://github.com/hradecek/randomaps">github.com/hradecek/randomaps</a></p></mat-toolbar>

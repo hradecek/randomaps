@@ -1,0 +1,16 @@
+<mat-accordion [hideToggle]="true">
+  <mat-expansion-panel *ngFor="let route of routes">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ route.center.lat }},{{ route.center.lng }}
+      </mat-panel-title>
+      <mat-panel-description>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-action-row>
+      <button mat-icon-button (click)="removeRoute($event, route)"><mat-icon color="warn">close</mat-icon></button>
+      <button mat-button>Download as JSON</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+
