@@ -5,10 +5,17 @@
 
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav mode="side" opened="false" class="sidenav">
-    <app-route-list #routeList [routes]="map.routes">Loading...</app-route-list>
+    <app-route-list style="width: 100%;" #routeList
+                    [routes]="map.routes"
+                    [focusedRoute]="map.focusedRoute"
+                    (removedRoute)="map.refocus($event)">Loading...</app-route-list>
   </mat-sidenav>
 
-  <app-map #map [routes]="routeList.routes">Loading...</app-map>
+  <app-map #map
+           [routes]="routeList.routes"
+           [focusedRoute]="routeList.focusedRoute">Loading...</app-map>
 </mat-sidenav-container>
 
-<mat-toolbar class="footer"><p>Source code: <a href="https://github.com/hradecek/randomaps">github.com/hradecek/randomaps</a></p></mat-toolbar>
+<mat-toolbar class="footer">
+  <p class="source-code">Source code: <a href="https://github.com/hradecek/randomaps">github.com/hradecek/randomaps</a></p>
+</mat-toolbar>

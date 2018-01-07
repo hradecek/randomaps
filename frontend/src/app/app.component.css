@@ -11,7 +11,7 @@
 .sidenav-container {
   position: absolute;
   top: 60px;
-  bottom: 60px;
+  bottom: 26px;
   left: 0;
   right: 0;
 }
@@ -21,7 +21,7 @@
   align-items: flex-start;
   justify-content: center;
   width: 300px;
-  background: rgba(255, 0, 0, 0.5);
+  background-color: #FFE082;
 }
 
 .header {
@@ -29,11 +29,20 @@
   top: 0;
   left: 0;
   right: 0;
+  background-color: #FFA000;
 }
 
 .footer {
+  font-weight: normal;
+  font-size: 13px;
+  height: 26px;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.footer > .source-code {
+  width: 100%;
+  text-align: right;
 }

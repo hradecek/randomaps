@@ -1,0 +1,5 @@
+.selected-item {  }
+
+.selected-item > mat-expansion-panel-header {
+  font-weight: bold;
+}
