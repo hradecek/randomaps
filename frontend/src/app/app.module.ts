@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AgmCoreModule } from '@agm/core';
 
 import {
-  MatButtonModule, MatExpansionModule, MatIconModule, MatMenuModule, MatSidenavModule,
+  MatButtonModule, MatExpansionModule, MatIconModule, MatMenuModule, MatSidenavModule, MatSliderModule,
   MatToolbarModule
 } from '@angular/material';
 
@@ -30,6 +30,7 @@ import { RouteListComponent } from './route-list/route-list.component';
     MatIconModule,
     MatMenuModule,
     MatButtonModule,
+    MatSliderModule,
     MatToolbarModule,
     HttpClientModule,
     MatSidenavModule,
