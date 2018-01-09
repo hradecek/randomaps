@@ -1,6 +1,7 @@
 <mat-toolbar class="header mat-app-background">
   <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
   <button mat-raised-button (click)="map.addRandomRoute($event)">Add random route</button>
+  <button mat-raised-button (click)="map.addRandomRealTimeRoute($event)">Add real-time route</button>
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container">

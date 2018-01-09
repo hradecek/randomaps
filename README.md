@@ -26,7 +26,7 @@ $ java -jar target/fat.jar
 ```
 
 ## Configuration
-Pass configuration on command line or directly to config.json `-Dconfig.google.key=myKey` == 
+Pass configuration on command line or directly to config.json `-Dconfig.google.key=myKey` ==
 ```
 {
     "google": {

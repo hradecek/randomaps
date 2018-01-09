@@ -9,15 +9,28 @@ import com.hradecek.maps.google.StaticMapApiService;
 import com.hradecek.maps.utils.GpsRandom;
 import com.hradecek.maps.utils.JsonUtils;
 import io.reactivex.*;
+import io.vertx.ext.bridge.PermittedOptions;
+import io.vertx.ext.web.handler.sockjs.BridgeOptions;
+import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.core.eventbus.EventBus;
 import io.vertx.reactivex.core.http.HttpServer;
 import io.vertx.reactivex.core.http.HttpServerResponse;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
+import io.vertx.reactivex.ext.web.handler.sockjs.SockJSHandler;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Verticle for randomized GPS functions.
@@ -48,7 +61,8 @@ public class RandomizedVerticle extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        GeoApiContext context =
+        final int httpPort = config().getInteger("http.port", 8080);
+        final GeoApiContext context =
                 new GeoApiContext.Builder().apiKey(JsonUtils.getString(config(), "google.key")).build();
 
         directionsService = new DirectionsApiService(context);
@@ -58,19 +72,58 @@ public class RandomizedVerticle extends AbstractVerticle {
         HttpServer server = vertx.createHttpServer();
         Router router = Router.router(vertx);
         router.get("/random").produces("application/json").handler(this::randomHandler);
-        server.requestHandler(router::accept).rxListen(8080).subscribe();
+        router.get("/realtime")
+                .handler(this::publishEvent);
+
+        /* Event Bus */
+        SockJSHandlerOptions sockJsOptions = new SockJSHandlerOptions();
+        BridgeOptions bridgeOptions = new BridgeOptions()
+                .addInboundPermitted(new PermittedOptions().setAddress("random"))
+                .addOutboundPermitted(new PermittedOptions().setAddress("random"));
+        SockJSHandler sockJSHandler = SockJSHandler.create(vertx, sockJsOptions).bridge(bridgeOptions);
+        router.get("/eventbus/*").handler(sockJSHandler);
+
+        server.requestHandler(router::accept).rxListen(httpPort).subscribe();
     }
 
-    private void randomHandler(RoutingContext context) {
+    private void publishEvent(RoutingContext context) {
+        // context.queryParam("client"); TODO: Get client ID, use for dedicated eventbus address
+        context.response().putHeader("Access-Control-Allow-Origin", "*").end();
         final RandomJourney randomJourney = new RandomJourney(placesService, directionsService);
         randomLocations()
                 .skipWhile(staticMapApiService::isWater)
                 .firstOrError()
                 .flatMap(this::firstNearby)
                 .compose(randomJourney)
-                .map(this::polylineToBuffer)
                 .retry()
-                .subscribe(polyline -> createHttpResponse(context).end(polyline));
+                .map(polyline -> polyline.decodePath().stream().map(location -> Pair.of(polyline, location)).collect(Collectors.toList()))
+                .flatMapObservable(Observable::fromIterable)
+                .map(this::latLngToJson)
+                .zipWith(Observable.interval(50, TimeUnit.MILLISECONDS), (point, interval) -> point)
+                .subscribe(point -> {
+                    System.out.println("Publishing " + point);
+                    vertx.eventBus().publish("random", point);
+                });
+    }
+
+    private JsonObject latLngToJson(Pair<EncodedPolyline, LatLng> location) {
+        return new JsonObject().put("id", location.getLeft().getEncodedPath())
+                .put("lat", location.getRight().lat).put("lng", location.getRight().lng);
+    }
+
+    private void randomHandler(RoutingContext context) {
+        randomRoute().subscribe(polyline -> createHttpResponse(context).end(polyline));
+    }
+
+    private Single<Buffer> randomRoute() {
+        final RandomJourney randomJourney = new RandomJourney(placesService, directionsService);
+        return randomLocations()
+                .skipWhile(staticMapApiService::isWater)
+                .firstOrError()
+                .flatMap(this::firstNearby)
+                .compose(randomJourney)
+                .map(this::polylineToBuffer)
+                .retry();
     }
 
     private Flowable<LatLng> randomLocations() {

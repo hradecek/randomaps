@@ -12,4 +12,8 @@ export class MapService {
   randomJourney(): Observable<EncodedPolyline> {
     return this.client.get('http://localhost:8080/random').map(data => new EncodedPolyline(data['polyline']));
   }
+
+  realtimeJourney() {
+    return this.client.get('http://localhost:8080/realtime').subscribe();
+  }
 }

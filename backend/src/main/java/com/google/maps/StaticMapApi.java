@@ -4,6 +4,8 @@ import com.google.maps.internal.ApiConfig;
 import com.google.maps.model.LatLng;
 
 /**
+ * Static map API.
+ *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class StaticMapApi {
@@ -11,7 +13,18 @@ public class StaticMapApi {
 
     private StaticMapApi() {}
 
-    public static StaticMapApiRequest getStaticMap(GeoApiContext context, LatLng center, int width, int height, int zoom) {
+    /**
+     * Creates static map API request.
+     *
+     * @param context GeoApiContext
+     * @param center center of the final static map
+     * @param width width of the final static map
+     * @param height height of the final static map
+     * @param zoom used zoom
+     * @return static map API request
+     */
+    public static StaticMapApiRequest getStaticMap(
+            GeoApiContext context, LatLng center, int width, int height, int zoom) {
         return new StaticMapApiRequest(context).center(center).size(width, height).zoom(zoom);
     }
 }
