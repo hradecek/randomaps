@@ -3,6 +3,7 @@ package com.hradecek.maps;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.EncodedPolyline;
 import com.google.maps.model.LatLng;
+import com.hradecek.maps.config.ServerOptions;
 import com.hradecek.maps.google.DirectionsApiService;
 import com.hradecek.maps.google.PlacesApiService;
 import com.hradecek.maps.google.StaticMapApiService;
@@ -61,7 +62,7 @@ public class RandomizedVerticle extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        final int httpPort = config().getInteger("http.port", 8080);
+        final int serverPort = JsonUtils.getInteger(config(), "server.port");
         final GeoApiContext context =
                 new GeoApiContext.Builder().apiKey(JsonUtils.getString(config(), "google.key")).build();
 
@@ -83,7 +84,7 @@ public class RandomizedVerticle extends AbstractVerticle {
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx, sockJsOptions).bridge(bridgeOptions);
         router.get("/eventbus/*").handler(sockJSHandler);
 
-        server.requestHandler(router::accept).rxListen(httpPort).subscribe();
+        server.requestHandler(router::accept).rxListen(serverPort).subscribe();
     }
 
     private void publishEvent(RoutingContext context) {

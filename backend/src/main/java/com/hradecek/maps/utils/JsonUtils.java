@@ -39,4 +39,17 @@ public class JsonUtils {
 
         return null != json ? json.getString(key) : null;
     }
+
+    public static int getInteger(JsonObject json, String key) {
+        if (StringUtils.countMatches(key, ".") >= 1) {
+            String[] path = key.split("\\.", 2);
+            String partialKey = path[0];
+            String remainingKey = path[1];
+
+            return getInteger(json.getJsonObject(partialKey), remainingKey);
+        }
+
+        return json.getInteger(key);
+    }
+
 }

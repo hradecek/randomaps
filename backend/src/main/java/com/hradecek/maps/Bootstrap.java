@@ -1,8 +1,6 @@
 package com.hradecek.maps;
 
-import com.hradecek.maps.config.AppConfigRetriever;
-import com.hradecek.maps.config.ConfigOptions;
-import com.hradecek.maps.config.GoogleApiOptions;
+import com.hradecek.maps.config.*;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.vertx.core.DeploymentOptions;
@@ -64,7 +62,9 @@ public class Bootstrap {
      * @return
      */
     private static Pair<String, DeploymentOptions> getDeploymentOptions(String verticle) {
-        ConfigOptions options = new GoogleApiOptions(appConfigRetriever);
+        AppOptions options = new AppOptions()
+                .add(new GoogleApiOptions(appConfigRetriever))
+                .add(new ServerOptions(appConfigRetriever));
         return Pair.of(verticle, new DeploymentOptions().setConfig(options.config()));
     }
 }

@@ -3,7 +3,7 @@ package com.hradecek.maps.config;
 import io.vertx.core.json.JsonObject;
 
 /**
- * TODO:
+ * Google API options
  *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
@@ -47,5 +47,4 @@ public class GoogleApiOptions implements ConfigOptions {
 
         return new JsonObject().put(JsonKeys.API_KEY, api);
     }
-
 }
