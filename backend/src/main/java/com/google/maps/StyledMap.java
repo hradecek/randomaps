@@ -6,10 +6,17 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 /**
+ * <p>Customization for presentation of static map.
+ * <p>For more information see:
+ * <a href="https://developers.google.com/maps/documentation/static-maps/styling">developers.google.com</a>
+ *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class StyledMap implements UrlValue {
 
+    /**
+     * Feature for modification
+     */
     public enum Feature implements UrlValue {
         ALL,
         POI,
@@ -24,6 +31,9 @@ public class StyledMap implements UrlValue {
         }
     }
 
+    /**
+     * Element for modification
+     */
     public enum Element implements UrlValue {
         ALL,
         LABELS,
@@ -34,6 +44,9 @@ public class StyledMap implements UrlValue {
         }
     }
 
+    /**
+     * Rule to apply to specified features and elements
+     */
     public enum Rule implements UrlValue {
         HUE,
         COLOR,
@@ -53,16 +66,34 @@ public class StyledMap implements UrlValue {
     private final Element element;
     private final Map<Rule, String> rules;
 
+    /**
+     * Constructor
+     *
+     * @param feature feature to be modified
+     * @param rules set of rules with corresponding values
+     */
     public StyledMap(Feature feature, Map<Rule, String> rules) {
         this(feature, null, rules);
     }
 
+    /**
+     * Constructor
+     *
+     * @param feature feature to be modified
+     * @param element element to be modified
+     * @param rules set of rules with corresponding values
+     */
     public StyledMap(Feature feature, Element element, Map<Rule, String> rules) {
         this.feature = feature;
         this.element = element;
         this.rules = rules;
     }
 
+    /**
+     * Create URL string representing styled map
+     *
+     * @return URL 'style' string
+     */
     public String toUrlValue() {
         final StringJoiner joiner = new StringJoiner("|");
         joiner.add("feature:" + feature.toUrlValue());

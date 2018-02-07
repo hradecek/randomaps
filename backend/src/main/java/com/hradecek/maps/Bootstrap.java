@@ -46,9 +46,10 @@ public class Bootstrap {
     }
 
     /**
+     * Deployable verticle with options.
      *
-     * @param deploymentPair
-     * @return
+     * @param deploymentPair deployable pair
+     * @return Single deployable verticle
      */
     private static Single<String> deployVerticle(Pair<String, DeploymentOptions> deploymentPair)  {
         logger.debug("Deploying " + deploymentPair.getLeft() +
@@ -57,9 +58,10 @@ public class Bootstrap {
     }
 
     /**
+     * Create verticle's deployment options.
      *
-     * @param verticle
-     * @return
+     * @param verticle verticle to be deployed
+     * @return pair of verticle name and set of deployment options
      */
     private static Pair<String, DeploymentOptions> getDeploymentOptions(String verticle) {
         AppOptions options = new AppOptions()

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 public class JsonUtils {
 
     /**
-     * Get value of nested key defined in <i>dotted</i> form. If no key is found null is returned.
+     * Get string value of nested key defined in <i>dotted</i> form. If no key is found null is returned.
      * E.g. {@code some.nested.key} represents following structure with value {@code value}:
      * <pre>
      *   {
@@ -40,6 +40,23 @@ public class JsonUtils {
         return null != json ? json.getString(key) : null;
     }
 
+    /**
+     * Get integer value of nested key defined in <i>dotted</i> form. If no key is found null is returned.
+     * E.g. {@code some.nested.key} represents following structure with value {@code value}:
+     * <pre>
+     *   {
+     *     "some": {
+     *       "nested": {
+     *         "key": "value"
+     *       }
+     *     }
+     *   }
+     * </pre>
+     *
+     * @param json JSON object to be searched
+     * @param key nested key
+     * @return value
+     */
     public static int getInteger(JsonObject json, String key) {
         if (StringUtils.countMatches(key, ".") >= 1) {
             String[] path = key.split("\\.", 2);
@@ -51,5 +68,4 @@ public class JsonUtils {
 
         return json.getInteger(key);
     }
-
 }
