@@ -3,13 +3,15 @@ package com.hradecek.maps;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.EncodedPolyline;
 import com.google.maps.model.LatLng;
-import com.hradecek.maps.config.ServerOptions;
 import com.hradecek.maps.google.DirectionsApiService;
 import com.hradecek.maps.google.PlacesApiService;
 import com.hradecek.maps.google.StaticMapApiService;
 import com.hradecek.maps.utils.GpsRandom;
 import com.hradecek.maps.utils.JsonUtils;
 import io.reactivex.*;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
@@ -18,18 +20,13 @@ import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.AbstractVerticle;
-import io.vertx.reactivex.core.eventbus.EventBus;
 import io.vertx.reactivex.core.http.HttpServer;
 import io.vertx.reactivex.core.http.HttpServerResponse;
-import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
+import io.vertx.reactivex.ext.web.api.contract.openapi3.OpenAPI3RouterFactory;
 import io.vertx.reactivex.ext.web.handler.sockjs.SockJSHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -39,6 +36,21 @@ import java.util.stream.Collectors;
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class RandomizedVerticle extends AbstractVerticle {
+
+    /**
+     * API version
+     */
+    public static final String API_VERSION = "v1";
+
+    /**
+     * OpenAPI specification path
+     */
+    private static final String API_SPEC_FILE_PATH = "src/main/resources/api/v1/random-gps.yml";
+
+    /**
+     * Logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(RandomizedVerticle.class);
 
     /**
      * Random GPS generator
@@ -51,17 +63,18 @@ public class RandomizedVerticle extends AbstractVerticle {
     private DirectionsApiService directionsService;
 
     /**
-     * TODO:
+     * TODO: @Inject
      */
     private PlacesApiService placesService;
 
     /**
-     * TODO:
+     * TODO: @Inject
      */
     private StaticMapApiService staticMapApiService;
 
     @Override
     public void start() throws Exception {
+        final String serverHost = JsonUtils.getString(config(), "server.host");
         final int serverPort = JsonUtils.getInteger(config(), "server.port");
         final GeoApiContext context =
                 new GeoApiContext.Builder().apiKey(JsonUtils.getString(config(), "google.key")).build();
@@ -70,21 +83,24 @@ public class RandomizedVerticle extends AbstractVerticle {
         placesService = new PlacesApiService(context);
         staticMapApiService = new StaticMapApiService(context);
 
-        HttpServer server = vertx.createHttpServer();
-        Router router = Router.router(vertx);
-        router.get("/random").produces("application/json").handler(this::randomHandler);
-        router.get("/realtime")
-                .handler(this::publishEvent);
+        HttpServer server = vertx.createHttpServer(new HttpServerOptions().setHost(serverHost).setPort(serverPort));
+        OpenAPI3RouterFactory.rxCreateRouterFactoryFromFile(vertx, API_SPEC_FILE_PATH)
+                .map(routerFactory -> routerFactory.addHandlerByOperationId("route", this::randomHandler))
+                .flatMap(routerFactory -> server.requestHandler(routerFactory.getRouter()::accept).rxListen())
+                .subscribe(httpServer ->
+                                logger.info(String.format("HTTP server started at %s:%d", serverHost, serverPort)),
+                        Throwable::printStackTrace);
 
-        /* Event Bus */
+        // router.get("/realtime").handler(this::publishEvent);
+        // router.get("/eventbus/*").handler(sockJsHandler());
+    }
+
+    private SockJSHandler sockJsHandler() {
         SockJSHandlerOptions sockJsOptions = new SockJSHandlerOptions();
         BridgeOptions bridgeOptions = new BridgeOptions()
                 .addInboundPermitted(new PermittedOptions().setAddress("random"))
                 .addOutboundPermitted(new PermittedOptions().setAddress("random"));
-        SockJSHandler sockJSHandler = SockJSHandler.create(vertx, sockJsOptions).bridge(bridgeOptions);
-        router.get("/eventbus/*").handler(sockJSHandler);
-
-        server.requestHandler(router::accept).rxListen(serverPort).subscribe();
+        return SockJSHandler.create(vertx, sockJsOptions).bridge(bridgeOptions);
     }
 
     private void publishEvent(RoutingContext context) {

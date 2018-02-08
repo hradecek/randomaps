@@ -1,0 +1,9 @@
+description: Represents route consisting from more than one points
+type: object
+required:
+  - route
+properties:
+  route:
+    type: array
+    items:
+      $ref: 'schemas/LatLng.yml'

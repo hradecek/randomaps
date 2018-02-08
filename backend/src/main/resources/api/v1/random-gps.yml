@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  version: 0.0.0
+  title: Random GPS
+  description: Generating randomized GPS locations
+  contact:
+    name: Ivo Hradek
+    url: https://github.com/hradecek
+    email: ivohradek@gmail.com
+servers:
+  - url: localhost:{port}/v1
+    description: Development server
+    variables:
+      port:
+        default: '8080'
+tags:
+  - name: route
+    description: Generate random route
+paths:
+  /v1/route:
+    get:
+      tags:
+        - route
+      summary: Generate a road
+      description: Generate a road route between two random locations
+      operationId: route
+      responses:
+        '200':
+          description: Random route as a list of locations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+components:
+  schemas:
+    LatLng:
+      $ref: 'schemas/LatLng.yml'
+    Route:
+      $ref: 'schemas/Route.yml'

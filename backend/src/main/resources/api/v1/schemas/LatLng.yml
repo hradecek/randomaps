@@ -1,0 +1,16 @@
+description: Represents Latitue and Longitude
+type: object
+required:
+  - lat
+  - lng
+properties:
+  lat:
+    type: number
+    format: double
+    example: -34.397
+    description: Represents latitude in decimal degrees
+  lng:
+    type: number
+    format: double
+    example: 150.644
+    description: Represents longitude in decimal degrees

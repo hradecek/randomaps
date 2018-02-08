@@ -2,6 +2,7 @@ package com.hradecek.maps.config;
 
 import io.vertx.core.json.JsonObject;
 
+import static com.hradecek.maps.config.ServerOptions.JsonKeys.HOST;
 import static com.hradecek.maps.config.ServerOptions.JsonKeys.PORT;
 import static com.hradecek.maps.config.ServerOptions.JsonKeys.SERVER_ROOT;
 
@@ -13,20 +14,37 @@ import static com.hradecek.maps.config.ServerOptions.JsonKeys.SERVER_ROOT;
 public class ServerOptions implements ConfigOptions {
 
     /**
+     * Default Server hostname
+     */
+    public static final String DEFAULT_SERVER_HOST = "localhost";
+
+    /**
      * Default Server HTTP port
      */
     public static final int DEFAULT_SERVER_PORT = 8080;
 
+    /**
+     * Environment variables
+     */
     public static class EnvKeys {
+        public static final String SERVER_HOST = "SERVER_HOST";
         public static final String SERVER_PORT = "SERVER_PORT";
     }
 
+    /**
+     * System properties
+     */
     public static class SysKeys {
+        public static final String SERVER_HOST = "server.host";
         public static final String SERVER_PORT = "server.port";
     }
 
+    /**
+     * JSON config keys, nested under root
+     */
     public static class JsonKeys {
         public static final String SERVER_ROOT = "server";
+        public static final String HOST = "host";
         public static final String PORT = "port";
     }
 
@@ -50,7 +68,20 @@ public class ServerOptions implements ConfigOptions {
      * @return json for server's options
      */
     public JsonObject config() {
-        return new JsonObject().put(JsonKeys.SERVER_ROOT, port(config));
+        return new JsonObject().put(JsonKeys.SERVER_ROOT, host(config).mergeIn(port(config)));
+    }
+
+    private JsonObject host(JsonObject config) {
+        String host = DEFAULT_SERVER_HOST;
+        if (config.containsKey(SERVER_ROOT) && config.getJsonObject(SERVER_ROOT).containsKey(HOST)) {
+            host = config.getJsonObject(SERVER_ROOT).getString(HOST);
+        } else if (config.containsKey(SysKeys.SERVER_HOST)) {
+            host = config.getString(SysKeys.SERVER_HOST);
+        } else if (config.containsKey(EnvKeys.SERVER_HOST)) {
+            host = config.getString(EnvKeys.SERVER_HOST);
+        }
+
+        return new JsonObject().put(HOST, host);
     }
 
     private JsonObject port(JsonObject config) {

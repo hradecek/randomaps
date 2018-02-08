@@ -36,6 +36,9 @@
     <!-- Google maps -->
     <version.google.maps>0.2.5</version.google.maps>
 
+    <!-- Logging -->
+    <version.slf4j.simple>1.7.25</version.slf4j.simple>
+
     <!-- Maven plugins -->
     <version.maven.shade.plugin>2.3</version.maven.shade.plugin>
     <version.exec.maven.plugin>1.4.0</version.exec.maven.plugin>
@@ -129,6 +132,11 @@
       <artifactId>vertx-rx-java2</artifactId>
       <version>${version.vertx}</version>
     </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web-api-contract</artifactId>
+      <version>${version.vertx}</version>
+    </dependency>
 
     <!-- Apache Commons -->
     <dependency>
@@ -144,6 +152,14 @@
       <version>${version.google.maps}</version>
     </dependency>
 
+    <!-- Logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${version.slf4j.simple}</version>
+    </dependency>
+
+    <!-- Testing -->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-unit</artifactId>
