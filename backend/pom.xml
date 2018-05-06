@@ -28,7 +28,7 @@
     <version.java.target>${version.java}</version.java.target>
 
     <!-- Vert.x -->
-    <version.vertx>3.5.0</version.vertx>
+    <version.vertx>3.5.1</version.vertx>
 
     <!-- Apache Commons -->
     <version.commons.lang>3.7</version.commons.lang>
