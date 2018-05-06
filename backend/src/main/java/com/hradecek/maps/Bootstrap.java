@@ -46,18 +46,6 @@ public class Bootstrap {
     }
 
     /**
-     * Deployable verticle with options.
-     *
-     * @param deploymentPair deployable pair
-     * @return Single deployable verticle
-     */
-    private static Single<String> deployVerticle(Pair<String, DeploymentOptions> deploymentPair)  {
-        logger.debug("Deploying " + deploymentPair.getLeft() +
-                     " | options: " + deploymentPair.getRight().getConfig().encodePrettily());
-        return vertx.rxDeployVerticle(deploymentPair.getLeft(), deploymentPair.getRight());
-    }
-
-    /**
      * Create verticle's deployment options.
      *
      * @param verticle verticle to be deployed
@@ -68,5 +56,17 @@ public class Bootstrap {
                 .add(new GoogleApiOptions(appConfigRetriever))
                 .add(new ServerOptions(appConfigRetriever));
         return Pair.of(verticle, new DeploymentOptions().setConfig(options.config()));
+    }
+
+    /**
+     * Deployable verticle with options.
+     *
+     * @param deploymentPair deployable pair
+     * @return Single deployable verticle
+     */
+    private static Single<String> deployVerticle(Pair<String, DeploymentOptions> deploymentPair)  {
+        logger.debug("Deploying " + deploymentPair.getLeft() +
+                     " | options: " + deploymentPair.getRight().getConfig().encodePrettily());
+        return vertx.rxDeployVerticle(deploymentPair.getLeft(), deploymentPair.getRight());
     }
 }
