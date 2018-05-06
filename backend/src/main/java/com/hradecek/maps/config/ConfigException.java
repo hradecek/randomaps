@@ -1,7 +1,7 @@
 package com.hradecek.maps.config;
 
 /**
- * TODO:
+ * Thrown when there are issues with config.
  *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */

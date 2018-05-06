@@ -6,19 +6,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * TODO:
+ * Aggregate all config options as a whole piece.
+ *
+ * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class AppOptions implements ConfigOptions {
 
     /**
-     * TODO:
+     * Set of all partial configs.
      */
     private Set<ConfigOptions> options = new HashSet<>();
 
     /**
-     * TODO:
+     * Get final config from joining partial configs.
      *
-     * @return
+     * @return final config
      */
     public JsonObject config() {
         JsonObject merged = new JsonObject();
@@ -30,10 +32,10 @@ public class AppOptions implements ConfigOptions {
     }
 
     /**
-     * TODO:
+     * Add new partial config.
      *
-     * @param configOptions
-     * @return
+     * @param configOptions partial config
+     * @return this config
      */
     public AppOptions add(ConfigOptions configOptions) {
         options.add(configOptions);

@@ -11,7 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * TODO:
+ * <p>Retrieve application configuration.
+ * <p>Application might be configured either via (with precedence):
+ * <ol>
+ *     <li>json configuration,</li>
+ *     <li>system properties passed,</li>
+ *     <li>environment variables.</li>
+ * </ol>
  *
  * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
@@ -28,7 +34,7 @@ public class AppConfigRetriever {
     private final ConfigRetriever configRetriever;
 
     /**
-     * TODO:
+     * Constructor
      *
      * @param vertx Vert.x instance
      */
@@ -47,9 +53,9 @@ public class AppConfigRetriever {
     }
 
     /**
-     * TODO:
+     * Get configuration.
      *
-     * @return
+     * @return configuration.
      */
     public Single<JsonObject> config() {
         return configRetriever.rxGetConfig();
