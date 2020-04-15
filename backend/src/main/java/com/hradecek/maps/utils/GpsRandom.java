@@ -1,6 +1,6 @@
 package com.hradecek.maps.utils;
 
-import com.google.maps.model.LatLng;
+import com.hradecek.maps.types.LatLng;
 
 import java.util.Random;
 
@@ -8,8 +8,6 @@ import static com.hradecek.maps.utils.GpsRandom.WGS84.SEMI_MAJOR_AXIS;
 
 /**
  * Generating random GPS locations.
- *
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class GpsRandom extends Random {
 
@@ -46,8 +44,8 @@ public class GpsRandom extends Random {
      * @return
      */
     public LatLng nextLatLng() {
-        final double latitude = (Math.random() * 180.0) - 90.0;
-        final double longitude = (Math.random() * 360.0) - 180.0;
+        var latitude = (Math.random() * 180.0) - 90.0;
+        var longitude = (Math.random() * 360.0) - 180.0;
 
         return new LatLng(latitude, longitude);
     }
@@ -74,14 +72,14 @@ public class GpsRandom extends Random {
      * @return random location
      */
     public LatLng nextLatLng(LatLng base, double minDistance, double maxDistance, double bearing) {
-        final double bearingR = Math.toRadians(bearing);
-        final double lat1R = Math.toRadians(base.lat);
-        final double lon1R = Math.toRadians(base.lng);
-        final double distanceR = (minDistance + nextDouble() * (maxDistance - minDistance)) / SEMI_MAJOR_AXIS;
+        var bearingR = Math.toRadians(bearing);
+        var lat1R = Math.toRadians(base.getLat());
+        var lon1R = Math.toRadians(base.getLng());
+        var distanceR = (minDistance + nextDouble() * (maxDistance - minDistance)) / SEMI_MAJOR_AXIS;
 
-        final double a = Math.sin(distanceR) * Math.cos(lat1R);
-        final double lat2 = Math.asin(Math.sin(lat1R) * Math.cos(distanceR) + a * Math.cos(bearingR));
-        final double lon2 = lon1R + Math.atan2(Math.sin(bearingR) * a, Math.cos(distanceR) - Math.sin(lat1R) * Math.sin(lat2));
+        var a = Math.sin(distanceR) * Math.cos(lat1R);
+        var lat2 = Math.asin(Math.sin(lat1R) * Math.cos(distanceR) + a * Math.cos(bearingR));
+        var lon2 = lon1R + Math.atan2(Math.sin(bearingR) * a, Math.cos(distanceR) - Math.sin(lat1R) * Math.sin(lat2));
 
         return new LatLng(Math.toDegrees(lat2), Math.toDegrees(lon2));
     }

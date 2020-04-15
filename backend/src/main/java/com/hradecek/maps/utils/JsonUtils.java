@@ -1,13 +1,13 @@
 package com.hradecek.maps.utils;
 
 import io.vertx.core.json.JsonObject;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Various utility functions for {@link io.vertx.core.json.JsonObject JSON} manipulation.
  *
  * @see JsonObject
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class JsonUtils {
 

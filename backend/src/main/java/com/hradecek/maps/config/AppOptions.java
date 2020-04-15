@@ -7,8 +7,6 @@ import java.util.Set;
 
 /**
  * Aggregate all config options as a whole piece.
- *
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class AppOptions implements ConfigOptions {
 
@@ -23,7 +21,7 @@ public class AppOptions implements ConfigOptions {
      * @return final config
      */
     public JsonObject config() {
-        JsonObject merged = new JsonObject();
+        var merged = new JsonObject();
         for (ConfigOptions option : options) {
             merged.mergeIn(option.config());
         }

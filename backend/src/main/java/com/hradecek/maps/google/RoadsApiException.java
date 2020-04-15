@@ -4,7 +4,6 @@ package com.hradecek.maps.google;
  * General exception related to Roads API issues.
  *
  * @see RoadsApiService
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class RoadsApiException extends RuntimeException {
 

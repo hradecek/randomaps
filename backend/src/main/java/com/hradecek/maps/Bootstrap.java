@@ -1,40 +1,44 @@
 package com.hradecek.maps;
 
-import com.hradecek.maps.config.*;
-import io.reactivex.Observable;
-import io.reactivex.Single;
+import com.hradecek.maps.config.AppConfigRetriever;
+import com.hradecek.maps.config.GoogleApiOptions;
+import com.hradecek.maps.config.ServerOptions;
+import com.hradecek.maps.google.GoogleMapsVerticle;
+import com.hradecek.maps.http.HttpServerVerticle;
+import com.hradecek.maps.random.RandomMapsVerticle;
+
 import io.vertx.core.DeploymentOptions;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.reactivex.core.Vertx;
-import org.apache.commons.lang3.tuple.Pair;
+
+import io.reactivex.Observable;
 
 /**
  * Bootstrap class.
- *
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class Bootstrap {
 
     /**
      * Logger
      */
-    private final static Logger logger = LoggerFactory.getLogger(Bootstrap.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
 
     /**
      * Vert.x instance
      */
-    private static final Vertx vertx = Vertx.vertx();
+    private static final Vertx VERTX = Vertx.vertx();
 
     /**
      * Main config retriever
      */
-    private static final AppConfigRetriever appConfigRetriever = new AppConfigRetriever(vertx);
+    private static final AppConfigRetriever APP_CONFIG_RETRIEVER = new AppConfigRetriever(VERTX);
 
     /**
      * Verticles to deploy
      */
-    private final static Observable<String> verticles = Observable.just(RandomizedVerticle.class.getCanonicalName());
+    private final static Observable<String> verticles = Observable.just(HttpServerVerticle.class.getCanonicalName());
 
     /**
      * Bootstrap method, deploy all necessary verticles.
@@ -42,7 +46,12 @@ public class Bootstrap {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        verticles.map(Bootstrap::getDeploymentOptions).flatMapSingle(Bootstrap::deployVerticle).subscribe();
+        final var googleApiOptions = new GoogleApiOptions(APP_CONFIG_RETRIEVER);
+        final var httpServerOptions = new ServerOptions(APP_CONFIG_RETRIEVER);
+        VERTX.rxDeployVerticle(new RandomMapsVerticle(), new DeploymentOptions().setConfig(new JsonObject().put("googlemaps.queue", "googlemaps.queue")))
+             .flatMap(id -> VERTX.rxDeployVerticle(new GoogleMapsVerticle(), new DeploymentOptions().setConfig(googleApiOptions.config())))
+             .flatMap(id -> VERTX.rxDeployVerticle(new HttpServerVerticle(), new DeploymentOptions().setConfig(httpServerOptions.config())))
+             .subscribe();
     }
 
     /**
@@ -51,12 +60,11 @@ public class Bootstrap {
      * @param verticle verticle to be deployed
      * @return pair of verticle name and set of deployment options
      */
-    private static Pair<String, DeploymentOptions> getDeploymentOptions(String verticle) {
-        AppOptions options = new AppOptions()
-                .add(new GoogleApiOptions(appConfigRetriever))
-                .add(new ServerOptions(appConfigRetriever));
-        return Pair.of(verticle, new DeploymentOptions().setConfig(options.config()));
-    }
+//    private static Pair<String, DeploymentOptions> getDeploymentOptions(String verticle) {
+//        final var options = new AppOptions().add(new GoogleApiOptions(APP_CONFIG_RETRIEVER))
+//                                            .add(new ServerOptions(APP_CONFIG_RETRIEVER));
+//        return Pair.of(verticle, new DeploymentOptions().setConfig(options.config()));
+//    }
 
     /**
      * Deployable verticle with options.
@@ -64,9 +72,9 @@ public class Bootstrap {
      * @param deploymentPair deployable pair
      * @return Single deployable verticle
      */
-    private static Single<String> deployVerticle(Pair<String, DeploymentOptions> deploymentPair)  {
-        logger.debug("Deploying " + deploymentPair.getLeft() +
-                     " | options: " + deploymentPair.getRight().getConfig().encodePrettily());
-        return vertx.rxDeployVerticle(deploymentPair.getLeft(), deploymentPair.getRight());
-    }
+//    private static Single<String> deployVerticle(Pair<String, DeploymentOptions> deploymentPair)  {
+//        LOGGER.debug("Deploying " + deploymentPair.getLeft() +
+//                     " | options: " + deploymentPair.getRight().getConfig().encodePrettily());
+//        return VERTX.rxDeployVerticle(deploymentPair.getLeft(), deploymentPair.getRight());
+//    }
 }

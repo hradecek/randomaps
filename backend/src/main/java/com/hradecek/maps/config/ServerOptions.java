@@ -2,14 +2,10 @@ package com.hradecek.maps.config;
 
 import io.vertx.core.json.JsonObject;
 
-import static com.hradecek.maps.config.ServerOptions.JsonKeys.HOST;
-import static com.hradecek.maps.config.ServerOptions.JsonKeys.PORT;
-import static com.hradecek.maps.config.ServerOptions.JsonKeys.SERVER_ROOT;
+import static com.hradecek.maps.config.ServerOptions.JsonKeys.*;
 
 /**
  * Class representing server options
- *
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class ServerOptions implements ConfigOptions {
 
@@ -72,7 +68,7 @@ public class ServerOptions implements ConfigOptions {
     }
 
     private JsonObject host(JsonObject config) {
-        String host = DEFAULT_SERVER_HOST;
+        var host = DEFAULT_SERVER_HOST;
         if (config.containsKey(SERVER_ROOT) && config.getJsonObject(SERVER_ROOT).containsKey(HOST)) {
             host = config.getJsonObject(SERVER_ROOT).getString(HOST);
         } else if (config.containsKey(SysKeys.SERVER_HOST)) {
@@ -85,7 +81,7 @@ public class ServerOptions implements ConfigOptions {
     }
 
     private JsonObject port(JsonObject config) {
-        int port = DEFAULT_SERVER_PORT;
+        var port = DEFAULT_SERVER_PORT;
         if (config.containsKey(SERVER_ROOT) && config.getJsonObject(SERVER_ROOT).containsKey(PORT)) {
             port = config.getJsonObject(SERVER_ROOT).getInteger(PORT);
         } else if (config.containsKey(SysKeys.SERVER_PORT)) {

@@ -4,8 +4,6 @@ import io.vertx.core.json.JsonObject;
 
 /**
  * Represents portion of application config with defined options.
- *
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public interface ConfigOptions {
 

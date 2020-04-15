@@ -12,11 +12,8 @@ import static com.google.maps.StaticMapApiRequest.MapParam.SIZE;
 
 /**
  * Static Map API Request.
- *
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
-public class StaticMapApiRequest
-        extends PendingResultBase<PhotoResult, StaticMapApiRequest, PhotoRequest.Response> {
+public class StaticMapApiRequest extends PendingResultBase<PhotoResult, StaticMapApiRequest, PhotoRequest.Response> {
 
     /**
      * Location URL parameters:
@@ -69,7 +66,7 @@ public class StaticMapApiRequest
         }
     }
 
-    private static UrlValue[] required = new UrlValue[] { CENTER, ZOOM, SIZE };
+    private static final UrlValue[] REQUIRED = new UrlValue[] { CENTER, ZOOM, SIZE };
 
     /**
      * Constructor.
@@ -82,11 +79,13 @@ public class StaticMapApiRequest
 
     @Override
     protected void validateRequest() {
-        Arrays.stream(required).map(UrlValue::toUrlValue).forEach(key -> {
-            if (!params().containsKey(key)) {
-                throw new IllegalArgumentException("Request must contain " + key);
-            }
-        });
+        Arrays.stream(REQUIRED)
+              .map(UrlValue::toUrlValue)
+              .forEach(key -> {
+                  if (!params().containsKey(key)) {
+                      throw new IllegalArgumentException("Request must contain " + key);
+                  }
+              });
     }
 
     /**

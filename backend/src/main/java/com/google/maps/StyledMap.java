@@ -6,11 +6,10 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 /**
- * <p>Customization for presentation of static map.
- * <p>For more information see:
+ * Customization for presentation of static map.
+ * <p>
+ * For more information see:
  * <a href="https://developers.google.com/maps/documentation/static-maps/styling">developers.google.com</a>
- *
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class StyledMap implements UrlValue {
 
@@ -95,7 +94,7 @@ public class StyledMap implements UrlValue {
      * @return URL 'style' string
      */
     public String toUrlValue() {
-        final StringJoiner joiner = new StringJoiner("|");
+        final var joiner = new StringJoiner("|");
         joiner.add("feature:" + feature.toUrlValue());
 
         if (null != element) {

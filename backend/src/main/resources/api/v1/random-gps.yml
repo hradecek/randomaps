@@ -34,6 +34,29 @@ paths:
 components:
   schemas:
     LatLng:
-      $ref: 'schemas/LatLng.yml'
+      description: Represents Latitue and Longitude
+      type: object
+      required:
+        - lat
+        - lng
+      properties:
+        lat:
+          type: number
+          format: double
+          example: -34.397
+          description: Represents latitude in decimal degrees
+        lng:
+          type: number
+          format: double
+          example: 150.644
+          description: Represents longitude in decimal degrees
     Route:
-      $ref: 'schemas/Route.yml'
+      description: Represents route consisting from more than one points
+      type: object
+      required:
+        - route
+      properties:
+        route:
+          type: array
+          items:
+            $ref: '#/components/schemas/LatLng.yml'

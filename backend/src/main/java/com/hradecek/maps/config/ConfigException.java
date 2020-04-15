@@ -2,8 +2,6 @@ package com.hradecek.maps.config;
 
 /**
  * Thrown when there are issues with config.
- *
- * @author <a href="mailto:ivohradek@gmail.com">Ivo Hradek</a>
  */
 public class ConfigException extends RuntimeException {
 

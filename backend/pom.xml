@@ -21,28 +21,24 @@
 
   <properties>
     <!-- Project settings -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <main.class>com.hradecek.maps.Bootstrap</main.class>
     <fat.jar>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</fat.jar>
-    <version.java>1.8</version.java>
-    <version.java.source>${version.java}</version.java.source>
-    <version.java.target>${version.java}</version.java.target>
-
+    <vertx.generated.directory>${project.basedir}/src/main/generated</vertx.generated.directory>
+    <version.java>11</version.java>
     <!-- Vert.x -->
-    <version.vertx>3.5.1</version.vertx>
-
+    <version.vertx>3.9.0</version.vertx>
     <!-- Apache Commons -->
     <version.commons.lang>3.7</version.commons.lang>
-
     <!-- Google maps -->
     <version.google.maps>0.2.5</version.google.maps>
-
     <!-- Logging -->
     <version.slf4j.simple>1.7.25</version.slf4j.simple>
-
     <!-- Maven plugins -->
     <version.maven.shade.plugin>2.3</version.maven.shade.plugin>
     <version.exec.maven.plugin>1.4.0</version.exec.maven.plugin>
-    <version.maven.compiler.plugin>3.6.1</version.maven.compiler.plugin>
+    <version.maven.clean.plugin>3.0.0</version.maven.clean.plugin>
+    <version.maven.compiler.plugin>3.8.1</version.maven.compiler.plugin>
   </properties>
 
   <build>
@@ -52,11 +48,29 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven.compiler.plugin}</version>
         <configuration>
-          <source>${version.java.source}</source>
-          <target>${version.java.target}</target>
+          <release>${version.java}</release>
+          <useIncrementalCompilation>false</useIncrementalCompilation>
+          <annotationProcessors>
+            <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
+          </annotationProcessors>
+          <generatedSourcesDirectory>${vertx.generated.directory}</generatedSourcesDirectory>
+          <compilerArgs>
+            <arg>-AoutputDirectory=${project.basedir}/src/main</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
-
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${version.maven.clean.plugin}</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${vertx.generated.directory}</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -85,7 +99,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -137,28 +150,41 @@
       <artifactId>vertx-web-api-contract</artifactId>
       <version>${version.vertx}</version>
     </dependency>
-
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-service-proxy</artifactId>
+      <version>${version.vertx}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-codegen</artifactId>
+      <version>${version.vertx}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-rx-java2-gen</artifactId>
+      <version>${version.vertx}</version>
+      <scope>provided</scope>
+    </dependency>
     <!-- Apache Commons -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>${version.commons.lang}</version>
     </dependency>
-
     <!-- Google Maps API -->
     <dependency>
       <groupId>com.google.maps</groupId>
       <artifactId>google-maps-services</artifactId>
       <version>${version.google.maps}</version>
     </dependency>
-
     <!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>${version.slf4j.simple}</version>
     </dependency>
-
     <!-- Testing -->
     <dependency>
       <groupId>io.vertx</groupId>
