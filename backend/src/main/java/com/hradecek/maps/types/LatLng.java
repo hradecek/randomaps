@@ -5,17 +5,28 @@ import io.vertx.core.json.JsonObject;
 
 import java.util.Objects;
 
+/**
+ * Represents GEO location as pair of latitude and longitude.
+ */
 @DataObject(generateConverter = true)
 public class LatLng {
 
     private final double lat;
     private final double lng;
 
+    /**
+     * JSON Attributes.
+     */
     private enum JsonAttributes {
         LAT("lat"), LNG("lng");
 
         private final String attributeName;
 
+        /**
+         * Constructor.
+         *
+         * @param attributeName attribute name
+         */
         JsonAttributes(final String attributeName) {
             this.attributeName = attributeName;
         }

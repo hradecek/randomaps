@@ -11,6 +11,9 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 
+/**
+ * RandomMapsService provides methods for generating random GEO locations.
+ */
 @ProxyGen
 @VertxGen
 public interface RandomMapsService {
@@ -25,6 +28,12 @@ public interface RandomMapsService {
         return new com.hradecek.maps.random.reactivex.RandomMapsService(new RandomMapsServiceVertxEBProxy(vertx, address));
     }
 
+    /**
+     * Generate random route.
+     *
+     * @param resultHandler result handler
+     * @return {@link RandomMapsService}
+     */
     @Fluent
     RandomMapsService route(Handler<AsyncResult<Route>> resultHandler);
 }

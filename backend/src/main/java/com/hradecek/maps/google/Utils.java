@@ -7,6 +7,11 @@ import com.google.maps.internal.PolylineEncoding;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Utility functions.
+ * <p>
+ * Used mainly for blending Google Maps API and Random Maps API.
+ */
 public class Utils {
 
     public static com.google.maps.model.LatLng toGLatLng(final LatLng latLng) {

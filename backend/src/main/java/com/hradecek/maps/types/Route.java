@@ -7,16 +7,27 @@ import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
+/**
+ * Represents encoded route.
+ */
 @DataObject
 public class Route {
 
     private final String points;
 
+    /**
+     * JSON Attributes
+     */
     private enum JsonAttributes {
         POINTS("points");
 
         private final String attributeName;
 
+        /**
+         * Constructor.
+         *
+         * @param attributeName attribute name
+         */
         JsonAttributes(final String attributeName) {
             this.attributeName = attributeName;
         }

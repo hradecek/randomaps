@@ -21,7 +21,7 @@ public class RandomMapsVerticle extends AbstractVerticle {
     public static final String RANDOM_MAP_QUEUE = "randommap.queue";
 
     /**
-     *
+     * Config key for google maps service.
      */
     private static final String CONFIG_GOOGLE_MAPS_QUEUE = "googlemaps.queue";
 
