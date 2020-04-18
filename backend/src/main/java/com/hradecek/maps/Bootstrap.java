@@ -5,7 +5,7 @@ import com.hradecek.maps.config.ConfigOptions;
 import com.hradecek.maps.config.GoogleApiOptions;
 import com.hradecek.maps.config.ServerOptions;
 import com.hradecek.maps.google.GoogleMapsVerticle;
-import com.hradecek.maps.http.HttpServerVerticle;
+import com.hradecek.maps.http.RestV1ServerVerticle;
 import com.hradecek.maps.random.RandomMapsVerticle;
 
 import io.vertx.core.DeploymentOptions;
@@ -22,19 +22,10 @@ import io.reactivex.Single;
  */
 public class Bootstrap {
 
-    /**
-     * Logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
 
-    /**
-     * Vert.x instance
-     */
     private static final Vertx VERTX = Vertx.vertx();
 
-    /**
-     * Main config retriever
-     */
     private static final AppConfigRetriever APP_CONFIG_RETRIEVER = new AppConfigRetriever(VERTX);
 
     /**
@@ -45,7 +36,7 @@ public class Bootstrap {
     public static void main(String[] args) {
         deploy(RandomMapsVerticle.class, () -> new JsonObject().put("googlemaps.queue", "googlemaps.queue"))
                 .flatMap(id -> deploy(GoogleMapsVerticle.class, new GoogleApiOptions(APP_CONFIG_RETRIEVER)))
-                .flatMap(id -> deploy(HttpServerVerticle.class, new ServerOptions(APP_CONFIG_RETRIEVER)))
+                .flatMap(id -> deploy(RestV1ServerVerticle.class, new ServerOptions(APP_CONFIG_RETRIEVER)))
                 .subscribe();
     }
 

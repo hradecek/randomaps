@@ -16,18 +16,10 @@ import java.io.IOException;
 public class GoogleMapsServiceImpl implements MapsService {
 
     /**
-     * TODO: @Inject
+     * Google maps APIs.
      */
     private DirectionsApiService directionsService;
-
-    /**
-     * TODO: @Inject
-     */
     private PlacesApiService placesService;
-
-    /**
-     * TODO: @Inject
-     */
     private StaticMapApiService staticMapApiService;
 
     /**
