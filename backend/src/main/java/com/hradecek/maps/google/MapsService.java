@@ -13,13 +13,20 @@ import io.vertx.core.Vertx;
 
 import com.google.maps.GeoApiContext;
 
+/**
+ * Provides API containing all maps related functionality.
+ */
 @ProxyGen
 @VertxGen
 public interface MapsService {
 
     @GenIgnore
     static MapsService create(final String googleApiKey) {
-        return new GoogleMapsServiceImpl(new GeoApiContext.Builder().apiKey(googleApiKey).build());
+        final var geoApiContext = new GeoApiContext.Builder().apiKey(googleApiKey).build();
+
+        return new GoogleMapsServiceImpl(new DirectionsApiService(geoApiContext),
+                                         new PlacesApiService(geoApiContext),
+                                         new StaticMapApiService(geoApiContext));
     }
 
     @GenIgnore
@@ -28,29 +35,32 @@ public interface MapsService {
     }
 
     /**
+     * Get the nearest place for specified {@code location}.
      *
-     * @param location
-     * @param resultHandler
-     * @return
+     * @param location location for the nearest place
+     * @param resultHandler handler
+     * @return {@link MapsService}
      */
     @Fluent
     MapsService nearbyPlace(LatLng location, Handler<AsyncResult<LatLng>> resultHandler);
 
     /**
+     * Generate route from {@code startLocation} to {@code endLocation}.
      *
-     * @param startLocation
-     * @param endLocation
-     * @param resultHandler
-     * @return
+     * @param startLocation start location
+     * @param endLocation end location
+     * @param resultHandler handler
+     * @return {@link MapsService}
      */
     @Fluent
     MapsService route(LatLng startLocation, LatLng endLocation, Handler<AsyncResult<Route>> resultHandler);
 
     /**
+     * Check whether specified {@code location} is water.
      *
-     * @param location
-     * @param resultHandler
-     * @return
+     * @param location location to be checked
+     * @param resultHandler handler
+     * @return {@link MapsService}
      */
     @Fluent
     MapsService isWater(LatLng location, Handler<AsyncResult<Boolean>> resultHandler);

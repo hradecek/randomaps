@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Project artifact settings -->
@@ -28,12 +29,19 @@
     <version.java>11</version.java>
     <!-- Vert.x -->
     <version.vertx>3.9.0</version.vertx>
+    <version.vertx.unit>3.5.0</version.vertx.unit>
     <!-- Apache Commons -->
     <version.commons.lang>3.7</version.commons.lang>
     <!-- Google maps -->
     <version.google.maps>0.2.5</version.google.maps>
     <!-- Logging -->
     <version.slf4j.simple>1.7.25</version.slf4j.simple>
+    <!-- JUnit -->
+    <version.junit>5.7.0</version.junit>
+    <!-- Hamcrest -->
+    <version.hamcrest>1.3</version.hamcrest>
+    <!-- Mockito -->
+    <version.mockito>3.5.15</version.mockito>
     <!-- Maven plugins -->
     <version.maven.shade.plugin>2.3</version.maven.shade.plugin>
     <version.exec.maven.plugin>1.4.0</version.exec.maven.plugin>
@@ -187,9 +195,34 @@
     </dependency>
     <!-- Testing -->
     <dependency>
+      <groupId>org.junit</groupId>
+      <artifactId>junit-bom</artifactId>
+      <version>${version.junit}</version>
+      <scope>test</scope>
+      <type>pom</type>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-all</artifactId>
+      <version>${version.hamcrest}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${version.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${version.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-unit</artifactId>
-      <version>3.5.0</version>
+      <version>${version.vertx.unit}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

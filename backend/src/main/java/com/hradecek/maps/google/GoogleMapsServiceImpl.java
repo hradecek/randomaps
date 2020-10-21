@@ -3,34 +3,40 @@ package com.hradecek.maps.google;
 import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
 
+import java.io.IOException;
+
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.reactivex.SingleHelper;
 
-import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
 
-import java.io.IOException;
-
+/**
+ * Service aggregating Google Maps API calls.
+ */
 public class GoogleMapsServiceImpl implements MapsService {
 
     /**
      * Google maps APIs.
      */
-    private DirectionsApiService directionsService;
-    private PlacesApiService placesService;
-    private StaticMapApiService staticMapApiService;
+    private final DirectionsApiService directionsService;
+    private final PlacesApiService placesService;
+    private final StaticMapApiService staticMapApiService;
 
     /**
      * Constructor
      *
-     * @param geoApiContext Google GEO API context
+     * @param directionsService {@link DirectionsApiService} reference
+     * @param placesService {@link PlacesApiService} reference
+     * @param staticMapService {@link StaticMapApiService} reference
      */
-    public GoogleMapsServiceImpl(final GeoApiContext geoApiContext) {
-        this.directionsService = new DirectionsApiService(geoApiContext);
-        this.placesService = new PlacesApiService(geoApiContext);
-        this.staticMapApiService = new StaticMapApiService(geoApiContext);
+    public GoogleMapsServiceImpl(final DirectionsApiService directionsService,
+                                 final PlacesApiService placesService,
+                                 final StaticMapApiService staticMapService) {
+        this.directionsService = directionsService;
+        this.placesService = placesService;
+        this.staticMapApiService = staticMapService;
     }
 
     @Override
@@ -48,6 +54,7 @@ public class GoogleMapsServiceImpl implements MapsService {
     }
 
     @Override
+    @SuppressWarnings("java:S2142")
     public MapsService isWater(LatLng location, Handler<AsyncResult<Boolean>> resultHandler) {
         try {
             resultHandler.handle(Future.succeededFuture(staticMapApiService.isWater(location)));

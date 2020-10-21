@@ -1,9 +1,9 @@
 package com.google.maps;
 
-import com.google.maps.internal.StringJoin.UrlValue;
-
 import java.util.Map;
 import java.util.StringJoiner;
+
+import com.google.maps.internal.StringJoin.UrlValue;
 
 /**
  * Customization for presentation of static map.

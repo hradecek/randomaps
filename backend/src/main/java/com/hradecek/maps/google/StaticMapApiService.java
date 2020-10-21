@@ -2,6 +2,12 @@ package com.hradecek.maps.google;
 
 import com.hradecek.maps.types.LatLng;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Map;
+import javax.imageio.ImageIO;
+
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
@@ -10,13 +16,6 @@ import com.google.maps.StaticMapApi;
 import com.google.maps.StyledMap;
 import com.google.maps.errors.ApiException;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
 import static com.google.maps.StyledMap.Feature;
 import static com.google.maps.StyledMap.Rule;
 
@@ -24,8 +23,6 @@ import static com.google.maps.StyledMap.Rule;
  * Simple service for Static Map API.
  */
 public class StaticMapApiService extends MapApi {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StaticMapApiService.class);
 
     /**
      * Constructor

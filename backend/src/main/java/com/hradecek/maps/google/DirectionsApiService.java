@@ -52,17 +52,24 @@ public class DirectionsApiService extends MapApi {
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        singleEmitter.onError(createException(origin, destination));
+                        singleEmitter.onError(createException(throwable, origin, destination));
                     }
                 })
         );
     }
 
-    // TODO don't throw away throwable, it MUST be propagate in thrown exception
     private DirectionsApiException createException(final LatLng origin, final LatLng destination) {
-        final var errorMessage = "No route has been found from " + origin + " to " + destination;
-        LOGGER.error(errorMessage);
+        return createException(null, origin, destination);
+    }
 
-        return new DirectionsApiException(errorMessage);
+    private DirectionsApiException createException(final Throwable cause,
+                                                   final LatLng origin,
+                                                   final LatLng destination) {
+        final var errorMessage = String.format("No route has been found from %s to %s.", origin, destination);
+        LOGGER.warn(errorMessage);
+
+        return cause != null
+                ? new DirectionsApiException(errorMessage, cause)
+                : new DirectionsApiException(errorMessage);
     }
 }

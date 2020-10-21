@@ -30,6 +30,8 @@ public class RestV1ServerVerticle extends AbstractVerticle {
 
     private static final String API_SPEC_FILE_PATH = "src/main/resources/api/v1/random-gps.yml";
 
+    private static final String OPERATION_ID_ROUTE = "route";
+
     private com.hradecek.maps.random.reactivex.RandomMapsService randomMapService;
 
     @Override
@@ -38,7 +40,9 @@ public class RestV1ServerVerticle extends AbstractVerticle {
 
         OpenAPI3RouterFactory
                 .rxCreate(vertx, API_SPEC_FILE_PATH)
-                .map(routerFactory -> routerFactory.addHandlerByOperationId("route", this::randomHandler))
+                .map(routerFactory ->
+                        routerFactory.addHandlerByOperationId(OPERATION_ID_ROUTE, this::routeHandler)
+                                     .addFailureHandlerByOperationId(OPERATION_ID_ROUTE, this::routeFailureHandler))
                 .flatMap(routerFactory -> httpListen(routerFactory.getRouter()))
                 .subscribe();
     }
@@ -53,7 +57,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
                     .doOnSuccess(server -> LOGGER.info(String.format("REST v1 server started at %s:%d", host, port)));
     }
 
-    private void randomHandler(RoutingContext context) {
+    private void routeHandler(RoutingContext context) {
         randomMapService.rxRoute()
                         .flatMapCompletable(route -> createHttpResponse(context).rxEnd(routeToBuffer(route)))
                         .subscribe();
@@ -72,5 +76,11 @@ public class RestV1ServerVerticle extends AbstractVerticle {
                       .putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS.toString(), HttpHeaders.GET)
                       .putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN.toString(), "*")
                       .putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+    }
+
+    private void routeFailureHandler(RoutingContext context) {
+        final String failureMessage = context.failure().getMessage();
+        LOGGER.error(failureMessage);
+        context.response().setStatusCode(500).end(failureMessage);
     }
 }

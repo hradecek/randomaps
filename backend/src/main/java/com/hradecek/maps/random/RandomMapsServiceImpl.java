@@ -19,6 +19,11 @@ import io.reactivex.SingleOnSubscribe;
 public class RandomMapsServiceImpl implements RandomMapsService {
 
     /**
+     * Maximal number of retry attempts in case of any failure.
+     */
+    public static final int MAX_RETRIES = 5;
+
+    /**
      * Random GPS generator
      */
     private static final GpsRandom GPS_RANDOM = new GpsRandom();
@@ -41,16 +46,16 @@ public class RandomMapsServiceImpl implements RandomMapsService {
     }
 
     private Single<Route> randomRoute() {
-        return randomLocation().flatMap(mapsService::rxNearbyPlace).flatMap(this::randomRouteFrom).retry();
+        return randomLocation().flatMap(mapsService::rxNearbyPlace).flatMap(this::randomRouteFrom).retry(MAX_RETRIES);
     }
 
     private Single<LatLng> randomLocation() {
-        return Single.create(new RandomLocationSubscribe(mapsService)).retry();
+        return Single.create(new RandomLocationSubscribe(mapsService)).retry(MAX_RETRIES);
     }
 
     private Single<Route> randomRouteFrom(final LatLng startLocation) {
         return Single.create(new RandomEndLocationSubscribe(startLocation, mapsService))
-                     .retry()
+                     .retry(MAX_RETRIES)
                      .flatMap(endLocation -> mapsService.rxRoute(startLocation, endLocation));
     }
 
@@ -63,7 +68,7 @@ public class RandomMapsServiceImpl implements RandomMapsService {
         }
 
         @Override
-        public void subscribe(SingleEmitter<LatLng> emitter) throws Exception {
+        public void subscribe(SingleEmitter<LatLng> emitter) {
             var randomLocation = GPS_RANDOM.nextLatLng();
             mapsService.rxIsWater(randomLocation)
                        .subscribe(isWater -> {
@@ -87,16 +92,20 @@ public class RandomMapsServiceImpl implements RandomMapsService {
         }
 
         @Override
-        public void subscribe(SingleEmitter<LatLng> emitter) throws Exception {
+        public void subscribe(SingleEmitter<LatLng> emitter) {
             mapsService.rxNearbyPlace(GPS_RANDOM.nextLatLng(startLocation, 50_000, 100_000))
                        .subscribe(endLocation -> {
                            if (endLocation.equals(startLocation)) {
-                               emitter.onError(new RuntimeException(String.format("No close end location found for '%s'.", startLocation)));
+                               emitter.onError(createRuntimeException(startLocation));
                            } else {
                                emitter.onSuccess(endLocation);
                            }
                        }, emitter::onError);
 
+        }
+
+        private static RuntimeException createRuntimeException(final LatLng startLocation) {
+            return new RuntimeException(String.format("No close end location found for '%s'.", startLocation));
         }
     }
 }

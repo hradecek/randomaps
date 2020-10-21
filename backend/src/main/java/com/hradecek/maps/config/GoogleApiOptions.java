@@ -29,7 +29,7 @@ public class GoogleApiOptions implements ConfigOptions {
         public static final String API_KEY = "key";
     }
 
-    private JsonObject config;
+    private final JsonObject config;
 
     /**
      * Constructor.

@@ -2,6 +2,8 @@ package com.hradecek.maps.google;
 
 import com.hradecek.maps.types.LatLng;
 
+import io.reactivex.Single;
+
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
@@ -9,7 +11,6 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.PendingResult;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.PlacesSearchResponse;
-import io.reactivex.Single;
 
 import static com.hradecek.maps.google.Utils.fromGLatLng;
 import static com.hradecek.maps.google.Utils.toGLatLng;
@@ -50,17 +51,22 @@ public class PlacesApiService extends MapApi {
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        emitter.onError(createException(location));
+                        emitter.onError(createException(location, throwable));
                     }
                 })
         );
     }
 
-    // TODO don't throw away throwable, it MUST be propagate in thrown exception
     private static PlacesApiException createException(final LatLng location) {
+        return createException(location, null);
+    }
+
+    private static PlacesApiException createException(final LatLng location, final Throwable throwable) {
         final var errorMessage = String.format("No places has been found nearby '%s'", location);
         LOGGER.error(errorMessage);
 
-        return new PlacesApiException(errorMessage);
+        return throwable == null
+                ? new PlacesApiException(errorMessage)
+                : new PlacesApiException(errorMessage, throwable);
     }
 }

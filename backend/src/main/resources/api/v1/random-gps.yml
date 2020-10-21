@@ -2,39 +2,64 @@ openapi: 3.0.0
 info:
   version: 0.0.0
   title: Random GPS
-  description: Generating randomized GPS locations
+  description: Generating randomized GPS locations.
   contact:
     name: Ivo Hradek
     url: https://github.com/hradecek
     email: ivohradek@gmail.com
 servers:
   - url: localhost:{port}/v1
-    description: Development server
+    description: Development server.
     variables:
       port:
         default: '8080'
 tags:
   - name: route
-    description: Generate random route
+    description: Generate random route.
 paths:
   /v1/route:
     get:
       tags:
         - route
-      summary: Generate a road
-      description: Generate a road route between two random locations
+      summary: Generate a random route
+      description: Generate a route between two completely random locations.
       operationId: route
+      parameters:
+        - $ref: '#/components/parameters/minDistanceParam'
       responses:
         '200':
-          description: Random route as a list of locations
+          description: Random route as a list of GPS point.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Route'
 components:
+  parameters:
+    startLocationParam:
+      in: query
+      name: startLocation
+      schema:
+        type: string
+      description: GPS location of start point
+    minDistanceParam:
+      in: query
+      name: minDistance
+      schema:
+        type: integer
+        default: 50
+        minimum: 0
+      description: The minimum distance (in kilometres) from start location.
+    maxDistanceParam:
+      in: query
+      name: maxDistance
+      schema:
+        type: integer
+        default: 100
+        minimum: 0
+      description: The maximum distance (in kilometres) from start location.
   schemas:
     LatLng:
-      description: Represents Latitue and Longitude
+      description: Represents Latitue and Longitude.
       type: object
       required:
         - lat
@@ -44,14 +69,14 @@ components:
           type: number
           format: double
           example: -34.397
-          description: Represents latitude in decimal degrees
+          description: Represents latitude in decimal degrees.
         lng:
           type: number
           format: double
           example: 150.644
-          description: Represents longitude in decimal degrees
+          description: Represents longitude in decimal degrees.
     Route:
-      description: Represents route consisting from more than one points
+      description: Represents route consisting from more than one points.
       type: object
       required:
         - route
