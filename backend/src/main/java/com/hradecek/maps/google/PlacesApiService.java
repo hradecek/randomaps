@@ -8,6 +8,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
 import com.google.maps.GeoApiContext;
+import com.google.maps.NearbySearchRequest;
 import com.google.maps.PendingResult;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.PlacesSearchResponse;
@@ -37,13 +38,13 @@ public class PlacesApiService extends MapApi {
      * @param location base GPS location
      * @return All found nearby places GPS coordination
      */
-    public Single<LatLng> nearbyPlace(LatLng location) {
-        return Single.create(emitter -> PlacesApi.nearbySearchQuery(context, toGLatLng(location)).radius(50_000).setCallback(
+    public Single<LatLng> nearbyPlace(final LatLng location) {
+        return Single.create(emitter -> createRequest(location).setCallback(
                 new PendingResult.Callback<>() {
                     @Override
                     public void onResult(PlacesSearchResponse response) {
                         if (response.results == null || response.results.length <= 0) {
-                            emitter.onError(createException(location));
+                            emitter.onError(createNoRouteException(location));
                         } else {
                             emitter.onSuccess(fromGLatLng(response.results[0].geometry.location));
                         }
@@ -51,22 +52,28 @@ public class PlacesApiService extends MapApi {
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        emitter.onError(createException(location, throwable));
+                        emitter.onError(createFailureException(location, throwable));
                     }
                 })
         );
     }
 
-    private static PlacesApiException createException(final LatLng location) {
-        return createException(location, null);
+    private NearbySearchRequest createRequest(final LatLng location) {
+        return PlacesApi.nearbySearchQuery(context, toGLatLng(location)).radius(50_000);
     }
 
-    private static PlacesApiException createException(final LatLng location, final Throwable throwable) {
-        final var errorMessage = String.format("No places has been found nearby '%s'", location);
-        LOGGER.error(errorMessage);
+    private static PlacesApiException createNoRouteException(final LatLng location) {
+        final var errorMessage = String.format("No place has been found for location %s.", location);
+        LOGGER.warn(errorMessage);
 
-        return throwable == null
-                ? new PlacesApiException(errorMessage)
-                : new PlacesApiException(errorMessage, throwable);
+        return new PlacesApiException(errorMessage);
+    }
+
+    private static PlacesApiException createFailureException(final LatLng location, final Throwable cause) {
+        final var errorMessage = String.format("No place can be found nearby %s, due to: %s",
+                                               location, cause.getMessage());
+        LOGGER.error(errorMessage, cause);
+
+        return new PlacesApiException(errorMessage, cause);
     }
 }

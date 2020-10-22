@@ -7,19 +7,38 @@ package com.hradecek.maps.google;
  */
 public class StaticMapApiException extends RuntimeException {
 
+    /**
+     * Constructor.
+     */
     public StaticMapApiException() {
         super();
     }
 
+    /**
+     * Constructor.
+     *
+     * @param message failure message
+     */
     public StaticMapApiException(String message) {
         super(message);
     }
 
-    public StaticMapApiException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+    /**
+     * Constructor.
+     *
+     * @param cause original cause
+     */
     public StaticMapApiException(Throwable cause) {
         super(cause);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param message failure message
+     * @param cause original cause
+     */
+    public StaticMapApiException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

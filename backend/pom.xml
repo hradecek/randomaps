@@ -186,6 +186,13 @@
       <groupId>com.google.maps</groupId>
       <artifactId>google-maps-services</artifactId>
       <version>${version.google.maps}</version>
+      <exclusions>
+        <!-- Used only for testing purposes. We import newest version. -->
+        <exclusion>
+          <groupId>com.squareup.okhttp3</groupId>
+          <artifactId>okhttp</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- Logging -->
     <dependency>
@@ -223,6 +230,12 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-unit</artifactId>
       <version>${version.vertx.unit}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>mockwebserver</artifactId>
+      <version>4.9.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -3,14 +3,16 @@ package com.hradecek.maps.google;
 import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
 
+import io.reactivex.Single;
+
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
 import com.google.maps.DirectionsApi;
+import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PendingResult;
 import com.google.maps.model.DirectionsResult;
-import io.reactivex.Single;
 
 import static com.hradecek.maps.google.Utils.toGLatLng;
 
@@ -38,38 +40,43 @@ public class DirectionsApiService extends MapApi {
      * @param destination end location
      * @return route
      */
-    public Single<Route> getRoute(LatLng origin, LatLng destination) {
-        return Single.create(singleEmitter -> DirectionsApi.getDirections(context,
-                toGLatLng(origin).toString(), toGLatLng(destination).toString()).setCallback(
+    public Single<Route> getRoute(final LatLng origin, final LatLng destination) {
+        return Single.create(singleEmitter -> createRequest(origin, destination).setCallback(
                 new PendingResult.Callback<>() {
                     @Override
                     public void onResult(DirectionsResult result) {
                         if (result.routes == null || result.routes.length == 0) {
-                            singleEmitter.onError(createException(origin, destination));
+                            singleEmitter.onError(createNoRouteFoundException(origin, destination));
                         }
                         singleEmitter.onSuccess(new Route(result.routes[0].overviewPolyline.getEncodedPath()));
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        singleEmitter.onError(createException(throwable, origin, destination));
+                        singleEmitter.onError(createFailureException(throwable, origin, destination));
                     }
                 })
         );
     }
 
-    private DirectionsApiException createException(final LatLng origin, final LatLng destination) {
-        return createException(null, origin, destination);
+    private DirectionsApiRequest createRequest(final LatLng origin, final LatLng destination) {
+        return DirectionsApi.getDirections(context, toGLatLng(origin).toString(), toGLatLng(destination).toString());
     }
 
-    private DirectionsApiException createException(final Throwable cause,
-                                                   final LatLng origin,
-                                                   final LatLng destination) {
+    private DirectionsApiException createNoRouteFoundException(final LatLng origin, final LatLng destination) {
         final var errorMessage = String.format("No route has been found from %s to %s.", origin, destination);
         LOGGER.warn(errorMessage);
 
-        return cause != null
-                ? new DirectionsApiException(errorMessage, cause)
-                : new DirectionsApiException(errorMessage);
+        return new DirectionsApiException(errorMessage);
+    }
+
+    private DirectionsApiException createFailureException(final Throwable cause,
+                                                          final LatLng origin,
+                                                          final LatLng destination) {
+        final var errorMessage = String.format("Route from %s to %s cannot be retrieved, due to: %s",
+                                               origin, destination, cause.getMessage());
+        LOGGER.error(errorMessage, cause);
+
+        return new DirectionsApiException(errorMessage, cause);
     }
 }

@@ -7,19 +7,38 @@ package com.hradecek.maps.google;
  */
 public class RoadsApiException extends RuntimeException {
 
+    /**
+     * Constructor.
+     */
     public RoadsApiException() {
         super();
     }
 
+    /**
+     * Constructor.
+     *
+     * @param message failure message
+     */
     public RoadsApiException(String message) {
         super(message);
     }
 
-    public RoadsApiException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+    /**
+     * Constructor.
+     *
+     * @param cause original cause
+     */
     public RoadsApiException(Throwable cause) {
         super(cause);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param message failure message
+     * @param cause original cause
+     */
+    public RoadsApiException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
