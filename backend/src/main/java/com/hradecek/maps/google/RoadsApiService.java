@@ -1,5 +1,7 @@
 package com.hradecek.maps.google;
 
+import io.reactivex.Single;
+
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
@@ -8,7 +10,6 @@ import com.google.maps.PendingResult.Callback;
 import com.google.maps.RoadsApi;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.SnappedPoint;
-import io.reactivex.Single;
 
 /**
  * Simple service for Roads API.

@@ -5,13 +5,13 @@ import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
 import com.hradecek.maps.utils.GpsRandom;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
-import io.vertx.reactivex.SingleHelper;
-
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
+
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.reactivex.SingleHelper;
 
 /**
  * Implementation of {@link RandomMapsService} using Google Map APIs.

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
  * Unit tests for {@link GoogleMapsServiceImpl}.
  */
 @ExtendWith(MockitoExtension.class)
-public class GoogleMapsServiceImplTest {
+public class MapsServiceImplTest {
 
     // Sample data
     private static final LatLng LOCATION_1 = new LatLng(1.0D, 1.0D);
@@ -64,28 +64,28 @@ public class GoogleMapsServiceImplTest {
     public void nearbyPlaceFailure() {
         when(placesService.nearbyPlace(any(LatLng.class))).thenReturn(singleError());
 
-        googleMapsService.nearbyPlace(LOCATION_1, GoogleMapsServiceImplTest::assertResultFailure);
+        googleMapsService.nearbyPlace(LOCATION_1, MapsServiceImplTest::assertResultFailure);
     }
 
     @Test
     public void routeFailure() {
         when(directionsService.getRoute(LOCATION_1, LOCATION_2)).thenReturn(singleError());
 
-        googleMapsService.route(LOCATION_1, LOCATION_2, GoogleMapsServiceImplTest::assertResultFailure);
+        googleMapsService.route(LOCATION_1, LOCATION_2, MapsServiceImplTest::assertResultFailure);
     }
 
     @Test
     public void routeSuccess() {
         when(directionsService.getRoute(LOCATION_1, LOCATION_2)).thenReturn(Single.just(ROUTE_1));
 
-        googleMapsService.route(LOCATION_1, LOCATION_2, GoogleMapsServiceImplTest::assertResultSuccess);
+        googleMapsService.route(LOCATION_1, LOCATION_2, MapsServiceImplTest::assertResultSuccess);
     }
 
     @Test
     public void isWaterFailure() throws Exception {
         when(staticMapService.isWater(LOCATION_1)).thenThrow(new IOException());
 
-        googleMapsService.isWater(LOCATION_1, GoogleMapsServiceImplTest::assertResultFailure);
+        googleMapsService.isWater(LOCATION_1, MapsServiceImplTest::assertResultFailure);
     }
 
     @Test
@@ -109,6 +109,7 @@ public class GoogleMapsServiceImplTest {
         assertThat(nearbyPlace.getLat(), is(expectedLatLng.getLat()));
         assertThat(nearbyPlace.getLng(), is(expectedLatLng.getLng()));
     }
+
     private static <T> void assertResultSuccess(AsyncResult<T> result) {
         assertThat(result.failed(), is(false));
         assertThat(result.cause(), is(nullValue()));

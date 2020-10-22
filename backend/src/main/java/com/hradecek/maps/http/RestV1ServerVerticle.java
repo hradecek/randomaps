@@ -5,6 +5,8 @@ import com.hradecek.maps.random.RandomMapsVerticle;
 import com.hradecek.maps.types.Route;
 import com.hradecek.maps.utils.JsonUtils;
 
+import io.reactivex.Single;
+
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonArray;
@@ -18,8 +20,6 @@ import io.vertx.reactivex.core.http.HttpServerResponse;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.api.contract.openapi3.OpenAPI3RouterFactory;
-
-import io.reactivex.Single;
 
 /**
  * Create REST v1 server.

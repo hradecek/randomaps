@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-
 import com.google.maps.GeoApiContext;
 import com.google.maps.StaticMapApi;
 import com.google.maps.StyledMap;
