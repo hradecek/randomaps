@@ -71,7 +71,7 @@ public class RandomMapsServiceImpl implements RandomMapsService {
             var randomLocation = GPS_RANDOM.nextLatLng();
             mapsService.rxIsWater(randomLocation)
                        .subscribe(isWater -> {
-                           if (isWater) {
+                           if (Boolean.TRUE.equals(isWater)) {
                                emitter.onError(new RuntimeException());
                            } else {
                                emitter.onSuccess(randomLocation);

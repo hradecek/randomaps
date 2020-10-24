@@ -14,6 +14,10 @@ import java.util.stream.Collectors;
  */
 public class Utils {
 
+    private Utils() {
+        throw new AssertionError("Utility class cannot be instantiated.");
+    }
+
     public static com.google.maps.model.LatLng toGLatLng(final LatLng latLng) {
         return new com.google.maps.model.LatLng(latLng.getLat(), latLng.getLng());
     }

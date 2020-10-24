@@ -2,8 +2,6 @@ package com.hradecek.maps.config;
 
 import io.vertx.core.json.JsonObject;
 
-import static com.hradecek.maps.config.ServerOptions.JsonKeys.*;
-
 /**
  * Class representing server options
  */
@@ -22,27 +20,21 @@ public class ServerOptions implements ConfigOptions {
     /**
      * Environment variables
      */
-    public static class EnvKeys {
-        public static final String SERVER_HOST = "SERVER_HOST";
-        public static final String SERVER_PORT = "SERVER_PORT";
-    }
+    public static final String ENV_SERVER_HOST = "SERVER_HOST";
+    public static final String ENV_SERVER_PORT = "SERVER_PORT";
 
     /**
      * System properties
      */
-    public static class SysKeys {
-        public static final String SERVER_HOST = "server.host";
-        public static final String SERVER_PORT = "server.port";
-    }
+    public static final String SYS_SERVER_HOST = "server.host";
+    public static final String SYS_SERVER_PORT = "server.port";
 
     /**
      * JSON config keys, nested under root
      */
-    public static class JsonKeys {
-        public static final String SERVER_ROOT = "server";
-        public static final String HOST = "host";
-        public static final String PORT = "port";
-    }
+    public static final String JSON_SERVER_ROOT = "server";
+    public static final String JSON_HOST = "host";
+    public static final String JSON_PORT = "port";
 
     /**
      * Partial JSON config representing Server's options
@@ -64,32 +56,32 @@ public class ServerOptions implements ConfigOptions {
      * @return json for server's options
      */
     public JsonObject config() {
-        return new JsonObject().put(JsonKeys.SERVER_ROOT, host(config).mergeIn(port(config)));
+        return new JsonObject().put(JSON_SERVER_ROOT, host(config).mergeIn(port(config)));
     }
 
     private JsonObject host(JsonObject config) {
         var host = DEFAULT_SERVER_HOST;
-        if (config.containsKey(SERVER_ROOT) && config.getJsonObject(SERVER_ROOT).containsKey(HOST)) {
-            host = config.getJsonObject(SERVER_ROOT).getString(HOST);
-        } else if (config.containsKey(SysKeys.SERVER_HOST)) {
-            host = config.getString(SysKeys.SERVER_HOST);
-        } else if (config.containsKey(EnvKeys.SERVER_HOST)) {
-            host = config.getString(EnvKeys.SERVER_HOST);
+        if (config.containsKey(JSON_SERVER_ROOT) && config.getJsonObject(JSON_SERVER_ROOT).containsKey(JSON_HOST)) {
+            host = config.getJsonObject(JSON_SERVER_ROOT).getString(JSON_HOST);
+        } else if (config.containsKey(SYS_SERVER_HOST)) {
+            host = config.getString(SYS_SERVER_HOST);
+        } else if (config.containsKey(ENV_SERVER_HOST)) {
+            host = config.getString(ENV_SERVER_HOST);
         }
 
-        return new JsonObject().put(HOST, host);
+        return new JsonObject().put(JSON_HOST, host);
     }
 
     private JsonObject port(JsonObject config) {
         var port = DEFAULT_SERVER_PORT;
-        if (config.containsKey(SERVER_ROOT) && config.getJsonObject(SERVER_ROOT).containsKey(PORT)) {
-            port = config.getJsonObject(SERVER_ROOT).getInteger(PORT);
-        } else if (config.containsKey(SysKeys.SERVER_PORT)) {
-            port = config.getInteger(SysKeys.SERVER_PORT);
-        } else if (config.containsKey(EnvKeys.SERVER_PORT)) {
-            port = config.getInteger(EnvKeys.SERVER_PORT);
+        if (config.containsKey(JSON_SERVER_ROOT) && config.getJsonObject(JSON_SERVER_ROOT).containsKey(JSON_PORT)) {
+            port = config.getJsonObject(JSON_SERVER_ROOT).getInteger(JSON_PORT);
+        } else if (config.containsKey(SYS_SERVER_PORT)) {
+            port = config.getInteger(SYS_SERVER_PORT);
+        } else if (config.containsKey(ENV_SERVER_PORT)) {
+            port = config.getInteger(ENV_SERVER_PORT);
         }
 
-        return new JsonObject().put(PORT, port);
+        return new JsonObject().put(JSON_PORT, port);
     }
 }

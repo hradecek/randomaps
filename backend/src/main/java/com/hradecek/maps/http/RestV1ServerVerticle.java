@@ -31,6 +31,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
     private static final String API_SPEC_FILE_PATH = "src/main/resources/api/v1/random-gps.yml";
 
     private static final String OPERATION_ID_ROUTE = "route";
+    private static final String JSON_KEY_ROUTE = "route";
 
     private com.hradecek.maps.random.reactivex.RandomMapsService randomMapService;
 
@@ -67,7 +68,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
         final var jsonArray = new JsonArray();
         route.decodePath().forEach(elem -> jsonArray.add(JsonObject.mapFrom(elem)));
 
-        return Buffer.buffer(new JsonObject().put("route", jsonArray).toString());
+        return Buffer.buffer(new JsonObject().put(JSON_KEY_ROUTE, jsonArray).toString());
     }
 
     private HttpServerResponse createHttpResponse(RoutingContext context) {

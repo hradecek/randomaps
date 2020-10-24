@@ -4,23 +4,17 @@ import com.hradecek.maps.types.LatLng;
 
 import java.util.Random;
 
-import static com.hradecek.maps.utils.GpsRandom.WGS84.SEMI_MAJOR_AXIS;
-
 /**
  * Generating random GPS locations.
  */
 public class GpsRandom extends Random {
 
     /**
-     * World Geodetic System constants
+     * World Geodetic System constants.
+     *
+     * Earth's semi major axis in metres
      */
-    public static class WGS84 {
-
-        /**
-         * Earth's semi major axis in metres
-         */
-        public static final double SEMI_MAJOR_AXIS = 6_378_137.0;
-    }
+    public static final double WGS84_SEMI_MAJOR_AXIS = 6_378_137.0;
 
     /**
      * Constructor
@@ -75,7 +69,7 @@ public class GpsRandom extends Random {
         var bearingR = Math.toRadians(bearing);
         var lat1R = Math.toRadians(base.getLat());
         var lon1R = Math.toRadians(base.getLng());
-        var distanceR = (minDistance + nextDouble() * (maxDistance - minDistance)) / SEMI_MAJOR_AXIS;
+        var distanceR = (minDistance + nextDouble() * (maxDistance - minDistance)) / WGS84_SEMI_MAJOR_AXIS;
 
         var a = Math.sin(distanceR) * Math.cos(lat1R);
         var lat2 = Math.asin(Math.sin(lat1R) * Math.cos(distanceR) + a * Math.cos(bearingR));

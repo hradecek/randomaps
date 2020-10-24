@@ -11,6 +11,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class JsonUtils {
 
+    private JsonUtils() {
+        throw new AssertionError("Utility class cannot be instantiated.");
+    }
+
     /**
      * Get string value of nested key defined in <i>dotted</i> form. If no key is found null is returned.
      * E.g. {@code some.nested.key} represents following structure with value {@code value}:

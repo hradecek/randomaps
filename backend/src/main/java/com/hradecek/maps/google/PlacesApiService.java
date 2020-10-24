@@ -21,7 +21,7 @@ import static com.hradecek.maps.google.Utils.toGLatLng;
  */
 public class PlacesApiService extends MapApi {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DirectionsApiService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlacesApiService.class);
 
     /**
      * Constructor
