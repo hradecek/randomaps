@@ -3,6 +3,7 @@ package com.hradecek.maps;
 import com.hradecek.maps.config.AppConfigRetriever;
 import com.hradecek.maps.config.ConfigOptions;
 import com.hradecek.maps.config.GoogleApiOptions;
+import com.hradecek.maps.config.RandomMapsOptions;
 import com.hradecek.maps.config.ServerOptions;
 import com.hradecek.maps.google.GoogleMapsVerticle;
 import com.hradecek.maps.http.RestV1ServerVerticle;
@@ -34,10 +35,14 @@ public class Bootstrap {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        deploy(RandomMapsVerticle.class, () -> new JsonObject().put("googlemaps.queue", "googlemaps.queue"))
+        deploy(RandomMapsVerticle.class, Bootstrap::randomMapsOptions)
                 .flatMap(id -> deploy(GoogleMapsVerticle.class, new GoogleApiOptions(APP_CONFIG_RETRIEVER)))
                 .flatMap(id -> deploy(RestV1ServerVerticle.class, new ServerOptions(APP_CONFIG_RETRIEVER)))
                 .subscribe();
+    }
+
+    private static JsonObject randomMapsOptions() {
+        return new RandomMapsOptions().googleMapsQueue(GoogleMapsVerticle.GOOGLE_MAPS_QUEUE).config();
     }
 
     private static Single<String> deploy(Class<? extends Verticle> verticle, final ConfigOptions config) {

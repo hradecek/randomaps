@@ -1,5 +1,6 @@
 package com.hradecek.maps.random;
 
+import com.hradecek.maps.config.RandomMapsOptions;
 import com.hradecek.maps.google.MapsService;
 
 import io.vertx.core.AbstractVerticle;
@@ -20,14 +21,9 @@ public class RandomMapsVerticle extends AbstractVerticle {
      */
     public static final String RANDOM_MAP_QUEUE = "randommap.queue";
 
-    /**
-     * Config key for google maps service.
-     */
-    private static final String CONFIG_GOOGLE_MAPS_QUEUE = "googlemaps.queue";
-
     @Override
     public void start() {
-        final var mapsService = MapsService.createProxy(vertx, config().getString(CONFIG_GOOGLE_MAPS_QUEUE));
+        final var mapsService = MapsService.createProxy(vertx, config().getString(RandomMapsOptions.GOOGLE_MAPS_QUEUE));
         new ServiceBinder(vertx).setAddress(RANDOM_MAP_QUEUE)
                                 .register(RandomMapsService.class, RandomMapsService.create(mapsService));
     }

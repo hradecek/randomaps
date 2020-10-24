@@ -21,7 +21,7 @@ public class RandomMapsServiceImpl implements RandomMapsService {
     /**
      * Maximal number of retry attempts in case of any failure.
      */
-    public static final int MAX_RETRIES = 5;
+    public static final int MAX_RETRIES = 4;
 
     /**
      * Random GPS generator
@@ -50,12 +50,11 @@ public class RandomMapsServiceImpl implements RandomMapsService {
     }
 
     private Single<LatLng> randomLocation() {
-        return Single.create(new RandomLocationSubscribe(mapsService)).retry(MAX_RETRIES);
+        return Single.create(new RandomLocationSubscribe(mapsService));
     }
 
     private Single<Route> randomRouteFrom(final LatLng startLocation) {
         return Single.create(new RandomEndLocationSubscribe(startLocation, mapsService))
-                     .retry(MAX_RETRIES)
                      .flatMap(endLocation -> mapsService.rxRoute(startLocation, endLocation));
     }
 
@@ -77,7 +76,7 @@ public class RandomMapsServiceImpl implements RandomMapsService {
                            } else {
                                emitter.onSuccess(randomLocation);
                            }
-                       });
+                       }, emitter::onError);
         }
     }
 
