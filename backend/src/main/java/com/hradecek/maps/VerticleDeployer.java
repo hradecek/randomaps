@@ -37,7 +37,8 @@ public class VerticleDeployer {
      * @return {@link Completable}
      */
     public Completable deploy(final List<VerticleDeployment> verticleDeployments) {
-        return verticleDeployments.stream()
+        return verticleDeployments
+                .stream()
                 .map(this::deferDeployment)
                 .reduce(Completable.complete(), Completable::andThen);
     }

@@ -42,7 +42,7 @@
     <!-- Mockito -->
     <version.mockito>3.5.15</version.mockito>
     <!-- Mockwebserver -->
-    <version.mockwebserver>4.9.0</version.mockwebserver>
+    <version.mockwebserver>3.8.1</version.mockwebserver>
     <!-- Maven plugins -->
     <version.maven.shade.plugin>2.3</version.maven.shade.plugin>
     <version.exec.maven.plugin>1.4.0</version.exec.maven.plugin>
@@ -187,12 +187,6 @@
       <groupId>com.google.maps</groupId>
       <artifactId>google-maps-services</artifactId>
       <version>${version.google.maps}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.squareup.okhttp3</groupId>
-          <artifactId>okhttp</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <!-- Logging -->
     <dependency>

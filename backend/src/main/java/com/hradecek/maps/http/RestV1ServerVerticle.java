@@ -7,6 +7,7 @@ import com.hradecek.maps.utils.JsonUtils;
 
 import io.reactivex.Single;
 
+import io.vertx.core.Future;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonArray;
@@ -33,10 +34,11 @@ public class RestV1ServerVerticle extends AbstractVerticle {
     private static final String OPERATION_ID_ROUTE = "route";
     private static final String JSON_KEY_ROUTE = "route";
 
+    private HttpServer httpServer;
     private com.hradecek.maps.random.reactivex.RandomMapsService randomMapService;
 
     @Override
-    public void start() {
+    public void start(final Future<Void> startFuture) {
         randomMapService = RandomMapsService.createProxy(vertx.getDelegate(), RandomMapsVerticle.RANDOM_MAP_QUEUE);
 
         OpenAPI3RouterFactory
@@ -45,7 +47,17 @@ public class RestV1ServerVerticle extends AbstractVerticle {
                         routerFactory.addHandlerByOperationId(OPERATION_ID_ROUTE, this::routeHandler)
                                      .addFailureHandlerByOperationId(OPERATION_ID_ROUTE, this::routeFailureHandler))
                 .flatMap(routerFactory -> httpListen(routerFactory.getRouter()))
-                .subscribe();
+                .doOnSuccess(httpsServer -> this.httpServer = httpsServer)
+                .ignoreElement()
+                .subscribe(startFuture::complete, startFuture::fail);
+    }
+
+    @Override
+    public void stop() {
+        httpServer.rxClose()
+                  .subscribe(
+                          () -> LOGGER.info("REST v1 server has been stopped."),
+                          throwable -> LOGGER.warn("Could not stop REST v1 server.", throwable));
     }
 
     private Single<HttpServer> httpListen(final Router router) {

@@ -47,8 +47,9 @@ public class DirectionsApiService extends MapApi {
                     public void onResult(DirectionsResult result) {
                         if (result.routes == null || result.routes.length == 0) {
                             singleEmitter.onError(createNoRouteFoundException(origin, destination));
+                        } else {
+                            singleEmitter.onSuccess(new Route(result.routes[0].overviewPolyline.getEncodedPath()));
                         }
-                        singleEmitter.onSuccess(new Route(result.routes[0].overviewPolyline.getEncodedPath()));
                     }
 
                     @Override
