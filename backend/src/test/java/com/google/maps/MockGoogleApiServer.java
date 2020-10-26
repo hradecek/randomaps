@@ -20,7 +20,7 @@ public class MockGoogleApiServer implements AutoCloseable {
     }
 
     private static GeoApiContext createGeoApiContext(final String baseUrl) {
-        return new GeoApiContext.Builder().apiKey("AIzaFakeKey").baseUrlForTesting(baseUrl).build();
+        return new GeoApiContext.Builder().apiKey("AIzaFakeKey").baseUrlOverride(baseUrl).build();
     }
 
     protected String getBaseUrl() {

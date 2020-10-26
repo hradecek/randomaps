@@ -32,7 +32,7 @@
     <!-- Apache Commons -->
     <version.commons.lang>3.7</version.commons.lang>
     <!-- Google maps -->
-    <version.google.maps>0.2.5</version.google.maps>
+    <version.google.maps>0.15.0</version.google.maps>
     <!-- Logging -->
     <version.slf4j.simple>1.7.25</version.slf4j.simple>
     <!-- JUnit -->
@@ -64,7 +64,7 @@
           </annotationProcessors>
           <generatedSourcesDirectory>${vertx.generated.directory}</generatedSourcesDirectory>
           <compilerArgs>
-            <arg>-AoutputDirectory=${project.basedir}/src/main</arg>
+            <arg>-Acodegen.output=${project.basedir}/src/main</arg>
           </compilerArgs>
         </configuration>
       </plugin>

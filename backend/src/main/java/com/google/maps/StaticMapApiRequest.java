@@ -1,10 +1,9 @@
 package com.google.maps;
 
+import java.util.Arrays;
+
 import com.google.maps.internal.StringJoin.UrlValue;
 import com.google.maps.model.LatLng;
-import com.google.maps.model.PhotoResult;
-
-import java.util.Arrays;
 
 import static com.google.maps.StaticMapApiRequest.LocationParam.CENTER;
 import static com.google.maps.StaticMapApiRequest.LocationParam.ZOOM;
@@ -13,7 +12,7 @@ import static com.google.maps.StaticMapApiRequest.MapParam.SIZE;
 /**
  * Static Map API Request.
  */
-public class StaticMapApiRequest extends PendingResultBase<PhotoResult, StaticMapApiRequest, PhotoRequest.Response> {
+public class StaticMapApiRequest extends PendingResultBase<ImageResult, StaticMapApiRequest, ImageResult.Response> {
 
     /**
      * Location URL parameters:
@@ -74,7 +73,7 @@ public class StaticMapApiRequest extends PendingResultBase<PhotoResult, StaticMa
      * @param context GeaApiContext
      */
     public StaticMapApiRequest(GeoApiContext context) {
-        super(context, StaticMapApi.API_CONFIG, PhotoRequest.Response.class);
+        super(context, StaticMapApi.API_CONFIG, ImageResult.Response.class);
     }
 
     @Override
