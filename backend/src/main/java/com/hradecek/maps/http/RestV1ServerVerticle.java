@@ -55,9 +55,8 @@ public class RestV1ServerVerticle extends AbstractVerticle {
     @Override
     public void stop() {
         httpServer.rxClose()
-                  .subscribe(
-                          () -> LOGGER.info("REST v1 server has been stopped."),
-                          throwable -> LOGGER.warn("Could not stop REST v1 server.", throwable));
+                  .subscribe(() -> LOGGER.info("REST v1 server has been stopped."),
+                             throwable -> LOGGER.warn("Could not stop REST v1 server.", throwable));
     }
 
     private Single<HttpServer> httpListen(final Router router) {
@@ -73,7 +72,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
     private void routeHandler(RoutingContext context) {
         randomMapService.rxRoute()
                         .flatMapCompletable(route -> createHttpResponse(context).rxEnd(routeToBuffer(route)))
-                        .subscribe();
+                        .subscribe(() -> {}, context::fail);
     }
 
     private static Buffer routeToBuffer(final Route route) {
@@ -92,8 +91,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
     }
 
     private void routeFailureHandler(RoutingContext context) {
-        final String failureMessage = context.failure().getMessage();
-        LOGGER.error(failureMessage);
-        context.response().setStatusCode(500).end(failureMessage);
+        LOGGER.error(context.failure());
+        context.response().setStatusCode(500).end();
     }
 }
