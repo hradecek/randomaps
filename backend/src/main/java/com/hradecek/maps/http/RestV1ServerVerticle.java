@@ -7,7 +7,7 @@ import com.hradecek.maps.utils.JsonUtils;
 
 import io.reactivex.Single;
 
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonArray;
@@ -38,7 +38,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
     private com.hradecek.maps.random.reactivex.RandomMapsService randomMapService;
 
     @Override
-    public void start(final Future<Void> startFuture) {
+    public void start(final Promise<Void> startPromise) {
         randomMapService = RandomMapsService.createProxy(vertx.getDelegate(), RandomMapsVerticle.RANDOM_MAP_QUEUE);
 
         OpenAPI3RouterFactory
@@ -49,7 +49,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
                 .flatMap(routerFactory -> httpListen(routerFactory.getRouter()))
                 .doOnSuccess(httpsServer -> this.httpServer = httpsServer)
                 .ignoreElement()
-                .subscribe(startFuture::complete, startFuture::fail);
+                .subscribe(startPromise::complete, startPromise::fail);
     }
 
     @Override
