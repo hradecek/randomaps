@@ -43,9 +43,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
 
         OpenAPI3RouterFactory
                 .rxCreate(vertx, API_SPEC_FILE_PATH)
-                .map(routerFactory ->
-                        routerFactory.addHandlerByOperationId(OPERATION_ID_ROUTE, this::routeHandler)
-                                     .addFailureHandlerByOperationId(OPERATION_ID_ROUTE, this::routeFailureHandler))
+                .map(this::creteRouteEndpoint)
                 .flatMap(routerFactory -> httpListen(routerFactory.getRouter()))
                 .doOnSuccess(httpsServer -> this.httpServer = httpsServer)
                 .ignoreElement()
@@ -67,6 +65,12 @@ public class RestV1ServerVerticle extends AbstractVerticle {
                     .requestHandler(router)
                     .rxListen()
                     .doOnSuccess(server -> LOGGER.info(String.format("REST v1 server started at %s:%d", host, port)));
+    }
+
+    private OpenAPI3RouterFactory creteRouteEndpoint(final OpenAPI3RouterFactory routerFactory) {
+        LOGGER.debug("Mounted: '/route'");
+        return routerFactory.addHandlerByOperationId(OPERATION_ID_ROUTE, this::routeHandler)
+                            .addFailureHandlerByOperationId(OPERATION_ID_ROUTE, this::routeFailureHandler);
     }
 
     private void routeHandler(RoutingContext context) {

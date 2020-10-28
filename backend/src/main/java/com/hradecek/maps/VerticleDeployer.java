@@ -49,7 +49,7 @@ public class VerticleDeployer {
 
     private Completable deploy(Class<? extends Verticle> verticle, final ConfigOptions config) {
         return vertx.rxDeployVerticle(verticle.getCanonicalName(), new DeploymentOptions().setConfig(config.config()))
-                    .doOnSuccess(id -> LOGGER.info(String.format("Deployed verticle: %s", verticle)))
+                    .doOnSuccess(id -> LOGGER.info(String.format("Deployed verticle: %s", verticle.getCanonicalName())))
                     .ignoreElement();
     }
 }

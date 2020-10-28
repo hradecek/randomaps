@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+  <Appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </Console>
+
+    <Async name="console_async">
+      <AppenderRef ref="console"/>
+    </Async>
+  </Appenders>
+
+  <Loggers>
+    <Logger name="com.hradecek.maps" level="DEBUG" additivity="false">
+      <AppenderRef ref="console_async"/>
+    </Logger>
+    <Root level="WARN">
+      <AppenderRef ref="console_async"/>
+    </Root>
+  </Loggers>
+</Configuration>

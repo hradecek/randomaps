@@ -21,6 +21,10 @@ import io.vertx.reactivex.core.Vertx;
  */
 public class Bootstrap {
 
+    static {
+        System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.Log4j2LogDelegateFactory");
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Bootstrap.class);
 
     private static final Vertx VERTX = Vertx.vertx();
