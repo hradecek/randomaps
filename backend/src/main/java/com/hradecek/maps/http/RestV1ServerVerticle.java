@@ -95,7 +95,7 @@ public class RestV1ServerVerticle extends AbstractVerticle {
     }
 
     private void routeFailureHandler(RoutingContext context) {
-        LOGGER.error(context.failure());
+        LOGGER.error("Cannot handle request for /route", context.failure());
         context.response().setStatusCode(500).end();
     }
 }

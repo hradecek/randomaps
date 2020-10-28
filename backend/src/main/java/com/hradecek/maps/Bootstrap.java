@@ -47,7 +47,7 @@ public class Bootstrap {
     public static void main(String[] args) {
         new VerticleDeployer(VERTX)
                 .deploy(VERTICLES)
-                .doOnError(LOGGER::error)
+                .doOnError(error -> LOGGER.error("Cannot deploy verticles", error))
                 .subscribe(() -> {}, error -> VERTX.close());
     }
 }

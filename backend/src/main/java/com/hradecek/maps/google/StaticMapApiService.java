@@ -36,7 +36,7 @@ public class StaticMapApiService extends MapsApi {
         try {
             var result = StaticMapApi.getStaticMap(context, Utils.toGLatLng(center), 1, 1, 21).style(style).await();
             return isBlack(toBufferedImage(result.imageData));
-        } catch (InterruptedException | IOException | ApiException ex) {
+        } catch (ApiException | IllegalStateException | InterruptedException | IOException ex) {
             throw new StaticMapApiException(ex);
         }
     }
