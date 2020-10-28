@@ -1,9 +1,9 @@
 package com.hradecek.maps.types;
 
+import java.util.Objects;
+
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-
-import java.util.Objects;
 
 /**
  * Represents GEO location as pair of latitude and longitude.

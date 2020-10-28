@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 /**
  * Unit tests for {@link RestV1ServerVerticle}.
- * <p>Tested endpoint:
+ * <p>Tested endpoints:
  * <ul>
  *     <li>{@code /route}
  * </ul>

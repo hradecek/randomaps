@@ -19,7 +19,7 @@ import static com.hradecek.maps.google.Utils.toGLatLng;
 /**
  * Simple service for Directions API.
  */
-public class DirectionsApiService extends MapApi {
+public class DirectionsApiService extends MapsApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DirectionsApiService.class);
 
@@ -64,11 +64,11 @@ public class DirectionsApiService extends MapApi {
         return DirectionsApi.getDirections(context, toGLatLng(origin).toString(), toGLatLng(destination).toString());
     }
 
-    private DirectionsApiException createNoRouteFoundException(final LatLng origin, final LatLng destination) {
+    private RouteNotFoundException createNoRouteFoundException(final LatLng origin, final LatLng destination) {
         final var errorMessage = String.format("No route has been found from %s to %s.", origin, destination);
         LOGGER.warn(errorMessage);
 
-        return new DirectionsApiException(errorMessage);
+        return new RouteNotFoundException(errorMessage);
     }
 
     private DirectionsApiException createFailureException(final Throwable cause,

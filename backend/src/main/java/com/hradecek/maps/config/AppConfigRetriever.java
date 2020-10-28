@@ -1,15 +1,15 @@
 package com.hradecek.maps.config;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import io.reactivex.Single;
+
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.config.ConfigRetriever;
 import io.vertx.reactivex.core.Vertx;
-
-import io.reactivex.Single;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Retrieve application configuration.

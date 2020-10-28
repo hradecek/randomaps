@@ -1,5 +1,6 @@
 package com.hradecek.maps.random;
 
+import com.hradecek.maps.google.MapsApiServiceException;
 import com.hradecek.maps.google.reactivex.MapsService;
 import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
@@ -11,12 +12,16 @@ import io.reactivex.SingleOnSubscribe;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.reactivex.SingleHelper;
 
 /**
  * Implementation of {@link RandomMapsService} using Google Map APIs.
  */
 public class RandomMapsServiceImpl implements RandomMapsService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RandomMapsVerticle.class);
 
     /**
      * Maximal number of retry attempts in case of any failure.
@@ -41,21 +46,36 @@ public class RandomMapsServiceImpl implements RandomMapsService {
 
     @Override
     public RandomMapsService route(Handler<AsyncResult<Route>> resultHandler) {
-        randomRoute().subscribe(SingleHelper.toObserver(resultHandler));
+        randomRoute()
+                .doOnSuccess(RandomMapsServiceImpl::debugLogSuccessRoute)
+                .subscribe(SingleHelper.toObserver(resultHandler));
         return this;
     }
 
-    private Single<Route> randomRoute() {
-        return randomLocation().flatMap(mapsService::rxNearbyPlace).flatMap(this::randomRouteFrom).retry(MAX_RETRIES);
+    private static void debugLogSuccessRoute(final Route route) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Route generated: number of points={}", route.decodePath().size());
+        }
     }
 
-    private Single<LatLng> randomLocation() {
+    private Single<Route> randomRoute() {
+        return randomStartLocation()
+                .flatMap(mapsService::rxNearbyPlace)
+                .flatMap(this::randomRouteTo)
+                .retry(MAX_RETRIES, RandomMapsServiceImpl::isRecoverableFailure);
+    }
+
+    private Single<LatLng> randomStartLocation() {
         return Single.create(new RandomLocationSubscribe(mapsService));
     }
 
-    private Single<Route> randomRouteFrom(final LatLng startLocation) {
+    private Single<Route> randomRouteTo(final LatLng startLocation) {
         return Single.create(new RandomEndLocationSubscribe(startLocation, mapsService))
                      .flatMap(endLocation -> mapsService.rxRoute(startLocation, endLocation));
+    }
+
+    private static boolean isRecoverableFailure(final Throwable failure) {
+        return !(failure instanceof MapsApiServiceException);
     }
 
     private static class RandomLocationSubscribe implements SingleOnSubscribe<LatLng> {

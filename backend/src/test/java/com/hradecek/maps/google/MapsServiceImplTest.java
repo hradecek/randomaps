@@ -82,14 +82,14 @@ public class MapsServiceImplTest {
     }
 
     @Test
-    public void isWaterFailure() throws Exception {
-        when(staticMapService.isWater(LOCATION_1)).thenThrow(new IOException());
+    public void isWaterFailure() {
+        when(staticMapService.isWater(LOCATION_1)).thenThrow(new StaticMapApiException());
 
         googleMapsService.isWater(LOCATION_1, MapsServiceImplTest::assertResultFailure);
     }
 
     @Test
-    public void isWaterSuccess() throws Exception {
+    public void isWaterSuccess() {
         when(staticMapService.isWater(LOCATION_1)).thenReturn(true);
         googleMapsService.isWater(LOCATION_1, result -> {
             assertResultSuccess(result);

@@ -1,11 +1,11 @@
 package com.hradecek.maps.google;
 
 /**
- * General exception related to Roads API issues.
+ * Non-recoverable {@link RoadsApiService} exception.
  *
  * @see RoadsApiService
  */
-public class RoadsApiException extends RuntimeException {
+public class RoadsApiException extends MapsApiServiceException {
 
     /**
      * Constructor.

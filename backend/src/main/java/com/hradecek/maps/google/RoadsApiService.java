@@ -1,17 +1,17 @@
 package com.hradecek.maps.google;
 
+import io.reactivex.Single;
+
 import com.google.maps.GeoApiContext;
 import com.google.maps.PendingResult.Callback;
 import com.google.maps.RoadsApi;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.SnappedPoint;
 
-import io.reactivex.Single;
-
 /**
  * Simple service for Roads API.
  */
-public class RoadsApiService extends MapApi {
+public class RoadsApiService extends MapsApi {
 
     /**
      * Constructor

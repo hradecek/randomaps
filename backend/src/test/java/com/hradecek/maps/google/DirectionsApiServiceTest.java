@@ -42,7 +42,7 @@ public class DirectionsApiServiceTest extends ApiServiceUnitTest {
     public void getRouteNoRouteCanBeFound() {
         runWithMockedServer(new MockDirectionsApiResponse(NO_ROUTE_RESPONSE), context ->
                 getTestRoute(context)
-                        .assertError(DirectionsApiException.class)
+                        .assertError(RouteNotFoundException.class)
                         .assertError(error -> error.getCause() == null));
     }
 

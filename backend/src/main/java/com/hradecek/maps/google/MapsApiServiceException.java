@@ -1,16 +1,14 @@
 package com.hradecek.maps.google;
 
 /**
- * Non-recoverable {@link DirectionsApiService} exception.
- *
- * @see DirectionsApiService
+ * Represents non-recoverable exception state for {@link MapsService}.
  */
-public class DirectionsApiException extends MapsApiServiceException {
+public class MapsApiServiceException extends RuntimeException {
 
     /**
      * Constructor.
      */
-    public DirectionsApiException() {
+    public MapsApiServiceException() {
         super();
     }
 
@@ -19,7 +17,7 @@ public class DirectionsApiException extends MapsApiServiceException {
      *
      * @param message failure message
      */
-    public DirectionsApiException(String message) {
+    public MapsApiServiceException(String message) {
         super(message);
     }
 
@@ -28,7 +26,7 @@ public class DirectionsApiException extends MapsApiServiceException {
      *
      * @param cause reference to original cause
      */
-    public DirectionsApiException(Throwable cause) {
+    public MapsApiServiceException(Throwable cause) {
         super(cause);
     }
 
@@ -38,7 +36,7 @@ public class DirectionsApiException extends MapsApiServiceException {
      * @param message failure message
      * @param cause reference to original cause
      */
-    public DirectionsApiException(String message, Throwable cause) {
+    public MapsApiServiceException(String message, Throwable cause) {
         super(message, cause);
     }
 }

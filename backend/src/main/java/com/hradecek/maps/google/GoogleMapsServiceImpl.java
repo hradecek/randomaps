@@ -3,14 +3,10 @@ package com.hradecek.maps.google;
 import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
 
-import java.io.IOException;
-
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.reactivex.SingleHelper;
-
-import com.google.maps.errors.ApiException;
 
 /**
  * Service aggregating Google Maps API calls.
@@ -58,7 +54,7 @@ public class GoogleMapsServiceImpl implements MapsService {
     public MapsService isWater(LatLng location, Handler<AsyncResult<Boolean>> resultHandler) {
         try {
             resultHandler.handle(Future.succeededFuture(staticMapApiService.isWater(location)));
-        } catch (InterruptedException | ApiException | IOException ex) {
+        } catch (StaticMapApiException ex) {
             resultHandler.handle(Future.failedFuture(ex));
         }
         return this;

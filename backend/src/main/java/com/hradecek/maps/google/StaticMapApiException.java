@@ -1,11 +1,11 @@
 package com.hradecek.maps.google;
 
 /**
- * General exception related to Static Map API issues.
+ * Non-recoverable {@link StaticMapApiService} exception.
  *
  * @see StaticMapApiService
  */
-public class StaticMapApiException extends RuntimeException {
+public class StaticMapApiException extends MapsApiServiceException {
 
     /**
      * Constructor.

@@ -5,7 +5,7 @@ import com.google.maps.GeoApiContext;
 /**
  * Base class for maps API services.
  */
-public abstract class MapApi {
+public abstract class MapsApi {
 
     /**
      * Geo API Context
@@ -17,7 +17,7 @@ public abstract class MapApi {
      *
      * @param context GeoApiContext
      */
-    public MapApi(GeoApiContext context) {
+    public MapsApi(GeoApiContext context) {
         this.context = context;
     }
 }

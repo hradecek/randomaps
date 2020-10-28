@@ -1,11 +1,11 @@
 package com.hradecek.maps.google;
 
 /**
- * General exception related to Places API issues.
+ * Non-recoverable {@link PlacesApiService} exception.
  *
  * @see PlacesApiService
  */
-public class PlacesApiException extends RuntimeException {
+public class PlacesApiException extends MapsApiServiceException {
 
     /**
      * Constructor.

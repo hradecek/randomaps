@@ -33,7 +33,7 @@ public class PlacesApiServiceTest extends ApiServiceUnitTest {
     public void nearbyPlaceNotFound() {
         runWithMockedServer(new MockPlacesApiResponse(NEARBY_PLACE_ZERO_RESULTS_RESPONSE), context ->
                 getTestNearbyPlace(context)
-                        .assertError(PlacesApiException.class)
+                        .assertError(NearbyPlaceNotFoundException.class)
                         .assertError(error -> error.getCause() == null));
     }
 

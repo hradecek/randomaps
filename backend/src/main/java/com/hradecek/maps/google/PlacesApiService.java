@@ -19,7 +19,7 @@ import static com.hradecek.maps.google.Utils.toGLatLng;
 /**
  * Simple service for Places API.
  */
-public class PlacesApiService extends MapApi {
+public class PlacesApiService extends MapsApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlacesApiService.class);
 
@@ -62,11 +62,11 @@ public class PlacesApiService extends MapApi {
         return PlacesApi.nearbySearchQuery(context, toGLatLng(location)).radius(50_000);
     }
 
-    private static PlacesApiException createNoRouteException(final LatLng location) {
+    private static NearbyPlaceNotFoundException createNoRouteException(final LatLng location) {
         final var errorMessage = String.format("No place has been found for location %s.", location);
         LOGGER.warn(errorMessage);
 
-        return new PlacesApiException(errorMessage);
+        return new NearbyPlaceNotFoundException(errorMessage);
     }
 
     private static PlacesApiException createFailureException(final LatLng location, final Throwable cause) {

@@ -1,16 +1,14 @@
 package com.hradecek.maps.google;
 
 /**
- * Non-recoverable {@link DirectionsApiService} exception.
- *
- * @see DirectionsApiService
+ * Throw when near-by place was not found.
  */
-public class DirectionsApiException extends MapsApiServiceException {
+public class NearbyPlaceNotFoundException extends Exception {
 
     /**
      * Constructor.
      */
-    public DirectionsApiException() {
+    public NearbyPlaceNotFoundException() {
         super();
     }
 
@@ -19,7 +17,7 @@ public class DirectionsApiException extends MapsApiServiceException {
      *
      * @param message failure message
      */
-    public DirectionsApiException(String message) {
+    public NearbyPlaceNotFoundException(String message) {
         super(message);
     }
 
@@ -28,7 +26,7 @@ public class DirectionsApiException extends MapsApiServiceException {
      *
      * @param cause reference to original cause
      */
-    public DirectionsApiException(Throwable cause) {
+    public NearbyPlaceNotFoundException(Throwable cause) {
         super(cause);
     }
 
@@ -38,7 +36,7 @@ public class DirectionsApiException extends MapsApiServiceException {
      * @param message failure message
      * @param cause reference to original cause
      */
-    public DirectionsApiException(String message, Throwable cause) {
+    public NearbyPlaceNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 }

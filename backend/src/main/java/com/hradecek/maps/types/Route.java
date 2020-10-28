@@ -2,10 +2,10 @@ package com.hradecek.maps.types;
 
 import com.hradecek.maps.google.Utils;
 
+import java.util.List;
+
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-
-import java.util.List;
 
 /**
  * Represents encoded route.

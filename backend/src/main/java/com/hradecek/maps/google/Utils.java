@@ -2,10 +2,10 @@ package com.hradecek.maps.google;
 
 import com.hradecek.maps.types.LatLng;
 
-import com.google.maps.internal.PolylineEncoding;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.google.maps.internal.PolylineEncoding;
 
 /**
  * Utility functions.

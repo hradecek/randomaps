@@ -19,7 +19,7 @@ import static com.google.maps.StyledMap.Rule;
 /**
  * Simple service for Static Map API.
  */
-public class StaticMapApiService extends MapApi {
+public class StaticMapApiService extends MapsApi {
 
     /**
      * Constructor
@@ -30,12 +30,15 @@ public class StaticMapApiService extends MapApi {
         super(context);
     }
 
-    public Boolean isWater(final LatLng center) throws InterruptedException, ApiException, IOException {
+    public Boolean isWater(final LatLng center) {
         final var rules = Map.of(Rule.COLOR, "0x000000");
         final var style = new StyledMap(Feature.WATER, rules);
-        final var result = StaticMapApi.getStaticMap(context, Utils.toGLatLng(center), 1, 1, 21).style(style).await();
-
-        return isBlack(toBufferedImage(result.imageData));
+        try {
+            var result = StaticMapApi.getStaticMap(context, Utils.toGLatLng(center), 1, 1, 21).style(style).await();
+            return isBlack(toBufferedImage(result.imageData));
+        } catch (InterruptedException | IOException | ApiException ex) {
+            throw new StaticMapApiException(ex);
+        }
     }
 
     private static BufferedImage toBufferedImage(byte[] imageData) throws IOException {
