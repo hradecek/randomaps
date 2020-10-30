@@ -1,25 +1,19 @@
 package com.hradecek.maps.http;
 
+import com.hradecek.maps.http.route.RouteEndpoint;
 import com.hradecek.maps.random.RandomMapsService;
 import com.hradecek.maps.random.RandomMapsVerticle;
-import com.hradecek.maps.types.Route;
 import com.hradecek.maps.utils.JsonUtils;
 
 import io.reactivex.Single;
 
 import io.vertx.core.Promise;
-import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.reactivex.core.AbstractVerticle;
-import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.core.http.HttpServer;
-import io.vertx.reactivex.core.http.HttpServerResponse;
 import io.vertx.reactivex.ext.web.Router;
-import io.vertx.reactivex.ext.web.RoutingContext;
 import io.vertx.reactivex.ext.web.api.contract.openapi3.OpenAPI3RouterFactory;
 
 /**
@@ -32,7 +26,6 @@ public class RestV1ServerVerticle extends AbstractVerticle {
     private static final String API_SPEC_FILE_PATH = "src/main/resources/api/v1/random-gps.yml";
 
     private static final String OPERATION_ID_ROUTE = "route";
-    private static final String JSON_KEY_ROUTE = "route";
 
     private HttpServer httpServer;
     private com.hradecek.maps.random.reactivex.RandomMapsService randomMapService;
@@ -69,33 +62,6 @@ public class RestV1ServerVerticle extends AbstractVerticle {
 
     private OpenAPI3RouterFactory creteRouteEndpoint(final OpenAPI3RouterFactory routerFactory) {
         LOGGER.debug("Mounted: '/route'");
-        return routerFactory.addHandlerByOperationId(OPERATION_ID_ROUTE, this::routeHandler)
-                            .addFailureHandlerByOperationId(OPERATION_ID_ROUTE, this::routeFailureHandler);
-    }
-
-    private void routeHandler(RoutingContext context) {
-        randomMapService.rxRoute()
-                        .flatMapCompletable(route -> createHttpResponse(context).rxEnd(routeToBuffer(route)))
-                        .subscribe(() -> {}, context::fail);
-    }
-
-    private static Buffer routeToBuffer(final Route route) {
-        final var jsonArray = new JsonArray();
-        route.decodePath().forEach(elem -> jsonArray.add(JsonObject.mapFrom(elem)));
-
-        return Buffer.buffer(new JsonObject().put(JSON_KEY_ROUTE, jsonArray).toString());
-    }
-
-    private HttpServerResponse createHttpResponse(RoutingContext context) {
-        return context.response()
-                      .putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS.toString(), HttpHeaders.CONTENT_TYPE)
-                      .putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS.toString(), HttpHeaders.GET)
-                      .putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN.toString(), "*")
-                      .putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-    }
-
-    private void routeFailureHandler(RoutingContext context) {
-        LOGGER.error("Cannot handle request for /route", context.failure());
-        context.response().setStatusCode(500).end();
+        return routerFactory.addHandlerByOperationId(OPERATION_ID_ROUTE, new RouteEndpoint(randomMapService));
     }
 }

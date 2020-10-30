@@ -33,6 +33,18 @@ public class LatLng {
     }
 
     /**
+     * Parse latitude and longitude from provided string {@code latLng}.
+     * <p>
+     * Note, that {@code latLng} string array is expected to be in right format and
+     * no additional validation is performed.
+     *
+     * @param latLng array containing latitude and longitude
+     */
+    public static LatLng parseLatLng(String[] latLng) {
+        return new LatLng(Double.parseDouble(latLng[0]), Double.parseDouble(latLng[1]));
+    }
+
+    /**
      * Constructor for JSON type.
      *
      * @param latLngJson {@link LatLng} encoded in {@link JsonObject}

@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   version: 0.0.0
   title: Random GPS
@@ -8,7 +8,7 @@ info:
     url: https://github.com/hradecek
     email: ivohradek@gmail.com
 servers:
-  - url: localhost:{port}/v1
+  - url: http://localhost:{port}
     description: Development server.
     variables:
       port:
@@ -21,14 +21,16 @@ paths:
     get:
       tags:
         - route
-      summary: Generate a random route
-      description: Generate a route between two completely random locations.
       operationId: route
+      summary: Generate a random route
+      description: Generate a route between two locations.
       parameters:
+        - $ref: '#/components/parameters/startLocationParam'
+        - $ref: '#/components/parameters/maxDistanceParam'
         - $ref: '#/components/parameters/minDistanceParam'
       responses:
         '200':
-          description: Random route as a list of GPS point.
+          description: Random route as a list of GPS points.
           content:
             application/json:
               schema:
@@ -40,7 +42,9 @@ components:
       name: startLocation
       schema:
         type: string
-      description: GPS location of start point
+      description: >
+        GPS coordinates of start location. Must be in form of "latitude,longitude", where latitude and longitude are
+        doubles.
     minDistanceParam:
       in: query
       name: minDistance
@@ -59,7 +63,7 @@ components:
       description: The maximum distance (in kilometres) from start location.
   schemas:
     LatLng:
-      description: Represents Latitue and Longitude.
+      description: Represents latitude and longitude.
       type: object
       required:
         - lat
@@ -84,4 +88,4 @@ components:
         route:
           type: array
           items:
-            $ref: '#/components/schemas/LatLng.yml'
+            $ref: '#/components/schemas/LatLng'
