@@ -1,7 +1,7 @@
 package com.hradecek.maps.utils;
 
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.function.DoublePredicate;
 
  /**
  * Various utility functions for numbers.
@@ -35,7 +35,7 @@ public class NumberUtils {
       * @return converted double or
       *         {@code Optional.empty()} if {@code string} cannot be converted or {@code predicate} does not hold
       */
-     public static Optional<Double> stringToDouble(final String string, Predicate<Double> predicate) {
+     public static Optional<Double> stringToDouble(final String string, DoublePredicate predicate) {
          try {
              double value = Double.parseDouble(string);
              return predicate.test(value) ? Optional.of(value) : Optional.empty();
@@ -55,6 +55,10 @@ public class NumberUtils {
       * @param <T> type parameter of provided {@code number}
       * @return true if {@code number} is in provided range, otherwise false
       */
+     /* Suppress warnings note:
+      *  - S2234: we are intentionally swapping arguments, so names doesn't match with function argument names
+      */
+     @SuppressWarnings("java:S2234")
      public static <T extends Comparable<T>> boolean isInRangeClosedBoth(T number, T lowBound, T highBound) {
          if (lowBound.compareTo(highBound) > 0) {
              return isInRangeClosedBoth(number, highBound, lowBound);
