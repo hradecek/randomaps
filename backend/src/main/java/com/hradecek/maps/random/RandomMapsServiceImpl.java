@@ -11,6 +11,7 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -33,7 +34,7 @@ public class RandomMapsServiceImpl implements RandomMapsService {
      */
     private static final GpsRandom GPS_RANDOM = new GpsRandom();
 
-    final MapsService mapsService;
+    private final MapsService mapsService;
 
     /**
      * Constructor.
@@ -46,27 +47,35 @@ public class RandomMapsServiceImpl implements RandomMapsService {
 
     @Override
     public RandomMapsService route(Handler<AsyncResult<Route>> resultHandler) {
-        randomRoute()
-                .doOnSuccess(RandomMapsServiceImpl::debugLogSuccessRoute)
-                .subscribe(SingleHelper.toObserver(resultHandler));
+        randomRoute().subscribe(SingleHelper.toObserver(resultHandler));
         return this;
     }
 
-    private static void debugLogSuccessRoute(final Route route) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Route generated: number of points={}", route.decodePath().size());
-        }
+    private Single<Route> randomRoute() {
+        return randomRouteFrom(Single.create(new RandomLocationSubscribe(mapsService)));
     }
 
-    private Single<Route> randomRoute() {
-        return randomStartLocation()
+    @Override
+    public RandomMapsService routeForStartLocation(final LatLng startLocation,
+                                                   Handler<AsyncResult<Route>> resultHandler) {
+        mapsService.rxIsWater(startLocation)
+                   .subscribe(isWater -> {
+                       if (isWater) {
+                           resultHandler.handle(Future.failedFuture("Start location cannot be on water."));
+                       } else {
+                           randomRouteFrom(Single.just(startLocation)).subscribe(SingleHelper.toObserver(resultHandler));
+                       }
+                   }, error -> resultHandler.handle(Future.failedFuture(error)));
+        return this;
+    }
+
+    private Single<Route> randomRouteFrom(Single<LatLng> startLocation) {
+        return startLocation
                 .flatMap(mapsService::rxNearbyPlace)
                 .flatMap(this::randomRouteTo)
-                .retry(MAX_RETRIES, RandomMapsServiceImpl::isRecoverableFailure);
-    }
+                .retry(MAX_RETRIES, RandomMapsServiceImpl::isRecoverableFailure)
+                .doOnSuccess(RandomMapsServiceImpl::debugLogSuccessRoute);
 
-    private Single<LatLng> randomStartLocation() {
-        return Single.create(new RandomLocationSubscribe(mapsService));
     }
 
     private Single<Route> randomRouteTo(final LatLng startLocation) {
@@ -76,6 +85,12 @@ public class RandomMapsServiceImpl implements RandomMapsService {
 
     private static boolean isRecoverableFailure(final Throwable failure) {
         return !(failure instanceof MapsApiServiceException);
+    }
+
+    private static void debugLogSuccessRoute(final Route route) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Route generated: number of points={}", route.decodePath().size());
+        }
     }
 
     private static class RandomLocationSubscribe implements SingleOnSubscribe<LatLng> {

@@ -7,6 +7,8 @@ import com.hradecek.maps.random.reactivex.RandomMapsService;
 import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
 
+import io.reactivex.Single;
+
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.buffer.Buffer;
@@ -39,14 +41,15 @@ public class RouteEndpoint extends RestV1Endpoint {
     @Override
     public void handle(RoutingContext context) {
         final var startLocationParam = context.queryParam(ROUTE_QUERY_START_LOCATION);
+        final Single<Route> routeSingle;
         if (startLocationParam != null) {
             final var startLocation = START_LOCATION_PARSER.parse(startLocationParam);
-            context.response().end(startLocation.toJson().toString());
+            routeSingle = randomMapService.rxRouteForStartLocation(startLocation);
         } else {
-            randomMapService.rxRoute()
-                    .flatMapCompletable(route -> createHttpJsonResponse(context).rxEnd(routeToBuffer(route)))
-                    .subscribe(() -> {}, context::fail);
+            routeSingle = randomMapService.rxRoute();
         }
+        routeSingle.flatMapCompletable(route -> createHttpJsonResponse(context).rxEnd(routeToBuffer(route)))
+                   .subscribe(() -> {}, context::fail);
     }
 
     private static Buffer routeToBuffer(final Route route) {
