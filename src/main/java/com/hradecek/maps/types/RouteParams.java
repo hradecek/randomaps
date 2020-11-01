@@ -15,8 +15,8 @@ public class RouteParams {
     private static final long DEFAULT_MAX_DISTANCE = 100_000L;
 
     private final LatLng startLocation;
-    private final long minDistance;
-    private final long maxDistance;
+    private final double minDistance;
+    private final double maxDistance;
 
     /**
      * JSON Attributes
@@ -35,6 +35,47 @@ public class RouteParams {
          */
         JsonAttributes(final String attributeName) {
             this.attributeName = attributeName;
+        }
+    }
+
+    /**
+     * Get route parameters builder.
+     *
+     * @return route parameters builder
+     */
+    public static RouteParamsBuilder builder() {
+        return new RouteParamsBuilder();
+    }
+
+    private RouteParams(final LatLng startLocation, double minDistance, double maxDistance) {
+        this.startLocation = startLocation;
+        this.minDistance = minDistance;
+        this.maxDistance = maxDistance;
+    }
+
+    public static class RouteParamsBuilder {
+
+        private LatLng startLocation;
+        private double minDistance;
+        private double maxDistance;
+
+        public RouteParamsBuilder startLocation(final LatLng startLocation) {
+            this.startLocation = startLocation;
+            return this;
+        }
+
+        public RouteParamsBuilder minDistance(double minDistance) {
+            this.minDistance = minDistance;
+            return this;
+        }
+
+        public RouteParamsBuilder maxDistance(double maxDistance) {
+            this.maxDistance = maxDistance;
+            return this;
+        }
+
+        public RouteParams build() {
+            return new RouteParams(startLocation, minDistance, maxDistance);
         }
     }
 
@@ -79,7 +120,7 @@ public class RouteParams {
      *
      * @return minimal distance
      */
-    public long getMinDistance() {
+    public double getMinDistance() {
         return minDistance;
     }
 
@@ -88,7 +129,7 @@ public class RouteParams {
      *
      * @return maximal distance
      */
-    public long getMaxDistance() {
+    public double getMaxDistance() {
         return maxDistance;
     }
 }

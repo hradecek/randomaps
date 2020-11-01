@@ -2,3 +2,10 @@
 .idea/
 *.iml
 
+# Build
+/target/
+/src/main/asciidoc/
+/src/main/generated/
+
+# Sonar
+/.scannerwork/

@@ -12,7 +12,7 @@ $ mvn clean install
 
 ### Requirements
  * maven
- * JDK 1.8
+ * JDK 11
 
 ## Run
 Either
@@ -22,11 +22,20 @@ $ mvn exec:java
 
 or
 ```sh
-$ java -jar target/fat.jar
+$ java -jar target/*fat.jar
 ```
 
 ## Configuration
-Pass configuration on command line or directly to config.json `-Dconfig.google.key=myKey` ==
+
+### Google Maps API key
+In order to generate random maps, Google Maps API key must be provided.
+
+Google Maps API key might be passed as:
+
+ - environment variable `GOOGLE_API_KEY=myKey`
+ - system variable `-Dgoogle.api.key=myKey`
+
+or as part of `config.json` configuration:
 ```
 {
     "google": {
@@ -34,5 +43,4 @@ Pass configuration on command line or directly to config.json `-Dconfig.google.k
     }
 }
 ```
-and will be merged (rewrite existing) `config.json`
 
