@@ -5,6 +5,7 @@ import com.hradecek.maps.config.ServerOptions;
 import com.hradecek.maps.random.RandomMapsService;
 import com.hradecek.maps.random.RandomMapsVerticle;
 import com.hradecek.maps.types.Route;
+import com.hradecek.maps.types.RouteParams;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -14,12 +15,14 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.junit5.VertxTestContext;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.serviceproxy.ServiceBinder;
 
+import org.bouncycastle.pqc.crypto.mceliece.McElieceParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -31,6 +34,9 @@ import static org.mockito.Mockito.verify;
  * Base test class for {@link RestV1ServerVerticle REST v1} unit tests.
  */
 public class RestV1VerticleTest {
+
+    // Sample test data
+    private static final RouteParams EMPTY_ROUTE_PARAMS = new RouteParams(new JsonObject());
 
     @Mock
     private RandomMapsService randomMaps;
@@ -69,7 +75,7 @@ public class RestV1VerticleTest {
         ApiV1Request mockRouteFailure() {
             mockedRouteBlock = () -> {
                 AsyncResult<Route> routeResult = Future.failedFuture(new RuntimeException("Failure message"));
-                verify(randomMaps).route(routeResultHandlerCaptor.capture());
+                verify(randomMaps).route(EMPTY_ROUTE_PARAMS, routeResultHandlerCaptor.capture());
                 routeResultHandlerCaptor.getValue().handle(routeResult);
             };
             return this;
@@ -78,7 +84,7 @@ public class RestV1VerticleTest {
         ApiV1Request mockRouteResult(final Route mockedRoute) {
             mockedRouteBlock = () -> {
                 AsyncResult<Route> routeResult = Future.succeededFuture(mockedRoute);
-                verify(randomMaps).route(routeResultHandlerCaptor.capture());
+                verify(randomMaps).route(EMPTY_ROUTE_PARAMS, routeResultHandlerCaptor.capture());
                 routeResultHandlerCaptor.getValue().handle(routeResult);
             };
             return this;

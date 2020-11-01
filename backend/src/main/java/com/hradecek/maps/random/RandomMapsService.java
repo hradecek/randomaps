@@ -1,8 +1,8 @@
 package com.hradecek.maps.random;
 
 import com.hradecek.maps.google.reactivex.MapsService;
-import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
+import com.hradecek.maps.types.RouteParams;
 
 import io.vertx.codegen.annotations.Fluent;
 import io.vertx.codegen.annotations.GenIgnore;
@@ -36,14 +36,5 @@ public interface RandomMapsService {
      * @return {@link RandomMapsService}
      */
     @Fluent
-    RandomMapsService route(Handler<AsyncResult<Route>> resultHandler);
-
-    /**
-     * Generate random route from {@code startLocation}.
-     *
-     * @param startLocation location in which route starts
-     * @param resultHandler result handler
-     */
-    @Fluent
-    RandomMapsService routeForStartLocation(LatLng startLocation, Handler<AsyncResult<Route>> resultHandler);
+    RandomMapsService route(RouteParams routeParams, Handler<AsyncResult<Route>> resultHandler);
 }

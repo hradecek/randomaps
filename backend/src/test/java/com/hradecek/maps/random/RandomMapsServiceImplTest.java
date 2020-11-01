@@ -3,12 +3,14 @@ package com.hradecek.maps.random;
 import com.hradecek.maps.google.reactivex.MapsService;
 import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
+import com.hradecek.maps.types.RouteParams;
 
 import java.util.Random;
 
 import io.reactivex.Single;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.json.JsonObject;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 
@@ -38,6 +40,9 @@ public class RandomMapsServiceImplTest {
 
     private static final Random RANDOM = new Random();
 
+    // Sample test data
+    private static final RouteParams EMPTY_ROUTE_PARAMS = new RouteParams(new JsonObject());
+
     @Mock
     private MapsService mapsService;
 
@@ -57,7 +62,7 @@ public class RandomMapsServiceImplTest {
         when(mapsService.rxNearbyPlace(any(LatLng.class))).thenAnswer(new RandomNearbyPlaceAnswer());
         when(mapsService.rxRoute(any(LatLng.class), any(LatLng.class))).thenAnswer(new RouteNotFoundAnswer(routeNotFoundCount));
 
-        randomMapsService.route(result -> context.verify(() -> {
+        randomMapsService.route(EMPTY_ROUTE_PARAMS, result -> context.verify(() -> {
             assertSuccess(result);
             verify(mapsService, times(MAX_TRIES)).rxIsWater(any(LatLng.class));
             verify(mapsService, times(2*MAX_TRIES)).rxNearbyPlace(any(LatLng.class));
@@ -89,7 +94,7 @@ public class RandomMapsServiceImplTest {
         when(mapsService.rxNearbyPlace(any(LatLng.class))).thenAnswer(new NearbyPlaceNotFoundAnswer(MAX_TRIES - 1));
         when(mapsService.rxRoute(any(LatLng.class), any(LatLng.class))).thenReturn(Single.just(new Route("route")));
 
-        randomMapsService.route(result -> context.verify(() -> {
+        randomMapsService.route(EMPTY_ROUTE_PARAMS, result -> context.verify(() -> {
             assertSuccess(result);
             verify(mapsService, times(MAX_TRIES)).rxIsWater(any(LatLng.class));
             verify(mapsService, times(MAX_TRIES + 1)).rxNearbyPlace(any(LatLng.class)); // extra one for next call in successful rxRoute
@@ -122,7 +127,7 @@ public class RandomMapsServiceImplTest {
         when(mapsService.rxNearbyPlace(any(LatLng.class))).thenAnswer(new RandomNearbyPlaceAnswer());
         when(mapsService.rxRoute(any(LatLng.class), any(LatLng.class))).thenReturn(Single.just(new Route("route")));
 
-        randomMapsService.route(result -> context.verify(() -> {
+        randomMapsService.route(EMPTY_ROUTE_PARAMS, result -> context.verify(() -> {
             assertSuccess(result);
             verify(mapsService, times(MAX_TRIES)).rxIsWater(any(LatLng.class));
             verify(mapsService, times(2)).rxNearbyPlace(any(LatLng.class));
@@ -150,7 +155,7 @@ public class RandomMapsServiceImplTest {
     public void routeOnlyWaterIsGenerated(VertxTestContext context) {
         when(mapsService.rxIsWater(any(LatLng.class))).thenReturn(Single.just(true));
 
-        randomMapsService.route(result -> context.verify(() -> {
+        randomMapsService.route(EMPTY_ROUTE_PARAMS, result -> context.verify(() -> {
             assertFailure(result);
             verify(mapsService, times(MAX_TRIES)).rxIsWater(any(LatLng.class));
             context.completeNow();
@@ -164,7 +169,7 @@ public class RandomMapsServiceImplTest {
         when(mapsService.rxNearbyPlace(any(LatLng.class))).thenAnswer(new RandomNearbyPlaceAnswer());
         when(mapsService.rxRoute(any(LatLng.class), any(LatLng.class))).thenReturn(Single.error(new RuntimeException(expectedErrorMessage)));
 
-        randomMapsService.route(result -> context.verify(() -> {
+        randomMapsService.route(EMPTY_ROUTE_PARAMS, result -> context.verify(() -> {
             assertFailure(result, expectedErrorMessage);
             verify(mapsService, times(MAX_TRIES)).rxIsWater(any(LatLng.class));
             verify(mapsService, times(2*MAX_TRIES)).rxNearbyPlace(any(LatLng.class));
@@ -187,7 +192,7 @@ public class RandomMapsServiceImplTest {
         when(mapsService.rxIsWater(any(LatLng.class))).thenReturn(Single.just(false));
         when(mapsService.rxNearbyPlace(any(LatLng.class))).thenReturn(Single.error(new RuntimeException(expectedErrorMessage)));
 
-        randomMapsService.route(result -> context.verify(() -> {
+        randomMapsService.route(EMPTY_ROUTE_PARAMS, result -> context.verify(() -> {
             assertFailure(result, expectedErrorMessage);
             verify(mapsService, times(MAX_TRIES)).rxIsWater(any(LatLng.class));
             verify(mapsService, times(MAX_TRIES)).rxNearbyPlace(any(LatLng.class));
@@ -200,7 +205,7 @@ public class RandomMapsServiceImplTest {
         final String expectedErrorMessage = "ExpectedErrorMessage";
         when(mapsService.rxIsWater(any(LatLng.class))).thenReturn(Single.error(new Exception(expectedErrorMessage)));
 
-        randomMapsService.route(result -> context.verify(() -> {
+        randomMapsService.route(EMPTY_ROUTE_PARAMS, result -> context.verify(() -> {
             assertFailure(result, expectedErrorMessage);
             verify(mapsService, times(MAX_TRIES)).rxIsWater(any(LatLng.class));
             context.completeNow();
