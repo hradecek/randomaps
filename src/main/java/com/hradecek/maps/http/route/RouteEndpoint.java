@@ -57,17 +57,17 @@ public class RouteEndpoint extends RestV1Endpoint {
         final var routeParamsBuilder = RouteParams.builder();
 
         final var startLocationParam = context.queryParam(ROUTE_QUERY_START_LOCATION);
-        if (startLocationParam != null) {
+        if (!startLocationParam.isEmpty()) {
             routeParamsBuilder.startLocation(START_LOCATION_PARSER.parse(startLocationParam));
         }
 
         final var minDistance = context.queryParam(ROUTE_QUERY_MIN_DISTANCE);
-        if (minDistance != null) {
+        if (!minDistance.isEmpty()) {
             routeParamsBuilder.minDistance(DISTANCE_PARSER.parse(minDistance));
         }
 
         final var maxDistance = context.queryParam(ROUTE_QUERY_MAX_DISTANCE);
-        if (maxDistance != null) {
+        if (!maxDistance.isEmpty()) {
             routeParamsBuilder.maxDistance(DISTANCE_PARSER.parse(maxDistance));
         }
 

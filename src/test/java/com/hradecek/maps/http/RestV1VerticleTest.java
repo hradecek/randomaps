@@ -22,12 +22,12 @@ import io.vertx.junit5.VertxTestContext;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.serviceproxy.ServiceBinder;
 
-import org.bouncycastle.pqc.crypto.mceliece.McElieceParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -72,19 +72,21 @@ public class RestV1VerticleTest {
             this.client = WebClient.create(vertx.getDelegate());
         }
 
+        // TODO: check params?
         ApiV1Request mockRouteFailure() {
             mockedRouteBlock = () -> {
                 AsyncResult<Route> routeResult = Future.failedFuture(new RuntimeException("Failure message"));
-                verify(randomMaps).route(EMPTY_ROUTE_PARAMS, routeResultHandlerCaptor.capture());
+                verify(randomMaps).route(any(RouteParams.class), routeResultHandlerCaptor.capture());
                 routeResultHandlerCaptor.getValue().handle(routeResult);
             };
             return this;
         }
 
+        // TODO: check params?
         ApiV1Request mockRouteResult(final Route mockedRoute) {
             mockedRouteBlock = () -> {
                 AsyncResult<Route> routeResult = Future.succeededFuture(mockedRoute);
-                verify(randomMaps).route(EMPTY_ROUTE_PARAMS, routeResultHandlerCaptor.capture());
+                verify(randomMaps).route(any(RouteParams.class), routeResultHandlerCaptor.capture());
                 routeResultHandlerCaptor.getValue().handle(routeResult);
             };
             return this;
