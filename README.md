@@ -1,3 +1,4 @@
+![All tests](https://github.com/hradecek/randomaps/workflows/All%20tests/badge.svg)
 # Randomized Maps
 
 * [Build](#build)
