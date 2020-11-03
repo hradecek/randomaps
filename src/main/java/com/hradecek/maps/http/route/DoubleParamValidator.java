@@ -13,30 +13,43 @@ import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
  *
  * <p>If validation is not successful {@link HttpStatusException} is thrown.
  */
-// TODO: Refactor, take as argument query param name
-// TODO: Create base class
 class DoubleParamValidator implements QueryParamValidator {
 
-    private static final String ERROR_BAD_FORMAT = "Query param must be floating point number";
-    private static final String ERROR_MORE_THAN_ONE_PARAM = "None or single query param was expected";
+    private final String queryParamName;
+
+    /**
+     * Constructor.
+     *
+     * @param queryParamName name of the query parameter
+     */
+    public DoubleParamValidator(final String queryParamName) {
+        this.queryParamName = queryParamName;
+    }
 
     @Override
-    public void validate(final List<String> distanceParam) {
-        assertZeroOrSingle(distanceParam);
+    public void validate(final List<String> doubleQueryParams) {
+        assertZeroOrSingle(doubleQueryParams);
 
-        if (distanceParam.size() == 1) {
+        if (doubleQueryParams.size() == 1) {
             try {
-                Double.parseDouble(distanceParam.get(0));
+                Double.parseDouble(doubleQueryParams.get(0));
             } catch (NumberFormatException ex) {
-                throw new HttpStatusException(BAD_REQUEST.code(), ERROR_BAD_FORMAT);
+                throw new HttpStatusException(BAD_REQUEST.code(), createBadFormatErrorMessage());
             }
-
         }
     }
 
-    private static void assertZeroOrSingle(final List<String> startLocationParam) {
-        if (startLocationParam.size() > 1) {
-            throw new HttpStatusException(BAD_REQUEST.code(), ERROR_MORE_THAN_ONE_PARAM);
+    private void assertZeroOrSingle(final List<String> doubleQueryParams) {
+        if (doubleQueryParams.size() > 1) {
+            throw new HttpStatusException(BAD_REQUEST.code(), createMoreThanOneParamErrorMessage());
         }
+    }
+
+    private String createBadFormatErrorMessage() {
+        return queryParamName + " must be floating point number";
+    }
+
+    private String createMoreThanOneParamErrorMessage() {
+        return "None or single " + queryParamName + " query parameters were expected";
     }
 }

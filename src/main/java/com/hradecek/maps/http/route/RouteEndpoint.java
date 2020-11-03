@@ -28,11 +28,14 @@ public class RouteEndpoint extends RestV1Endpoint {
                     new StartLocationParamValidator(),
                     param -> LatLng.parseLatLng(param.get(0).split(",")));
 
-    private static final QueryParamParser<Double> DISTANCE_PARSER =
-            new ValidatingQueryParamParser<>(
-                    new DoubleParamValidator(),
-                    param -> Double.parseDouble(param.get(0))
-            );
+    private static final QueryParamParser<Double> MIN_DISTANCE_PARSER = createDistanceParser(ROUTE_QUERY_MIN_DISTANCE);
+    private static final QueryParamParser<Double> MAX_DISTANCE_PARSER = createDistanceParser(ROUTE_QUERY_MAX_DISTANCE);
+
+    private static QueryParamParser<Double> createDistanceParser(final String queryParamName) {
+        return new ValidatingQueryParamParser<>(
+                new DoubleParamValidator(queryParamName),
+                param -> Double.parseDouble(param.get(0)));
+    }
 
     private final RandomMapsService randomMapService;
 
@@ -63,12 +66,12 @@ public class RouteEndpoint extends RestV1Endpoint {
 
         final var minDistance = context.queryParam(ROUTE_QUERY_MIN_DISTANCE);
         if (!minDistance.isEmpty()) {
-            routeParamsBuilder.minDistance(DISTANCE_PARSER.parse(minDistance));
+            routeParamsBuilder.minDistance(MIN_DISTANCE_PARSER.parse(minDistance));
         }
 
         final var maxDistance = context.queryParam(ROUTE_QUERY_MAX_DISTANCE);
         if (!maxDistance.isEmpty()) {
-            routeParamsBuilder.maxDistance(DISTANCE_PARSER.parse(maxDistance));
+            routeParamsBuilder.maxDistance(MAX_DISTANCE_PARSER.parse(maxDistance));
         }
 
         return routeParamsBuilder.build();
