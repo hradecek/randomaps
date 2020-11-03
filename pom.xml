@@ -10,7 +10,7 @@
   <version>0.0.0-SNAPSHOT</version>
 
   <!-- Project information -->
-  <name>Google Maps Random</name>
+  <name>RandomMaps</name>
   <description>Generating randomized routes etc.</description>
   <developers>
     <developer>

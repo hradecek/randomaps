@@ -15,7 +15,6 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.junit5.VertxTestContext;
@@ -34,9 +33,6 @@ import static org.mockito.Mockito.verify;
  * Base test class for {@link RestV1ServerVerticle REST v1} unit tests.
  */
 public class RestV1VerticleTest {
-
-    // Sample test data
-    private static final RouteParams EMPTY_ROUTE_PARAMS = new RouteParams(new JsonObject());
 
     @Mock
     private RandomMapsService randomMaps;
@@ -105,6 +101,7 @@ public class RestV1VerticleTest {
             }
 
             mockedRouteBlock.run();
+            context.completeNow();
         }
 
         private String createV1Url(final String endpoint) {

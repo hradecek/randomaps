@@ -101,9 +101,13 @@ public class RouteParams {
      * @return JSON representation
      */
     public JsonObject toJson() {
-        return new JsonObject().put(JsonAttributes.START_LOCATION.attributeName, startLocation.toJson())
-                               .put(JsonAttributes.MIN_DISTANCE.attributeName, minDistance)
-                               .put(JsonAttributes.MAX_DISTANCE.attributeName, maxDistance);
+        final var json = new JsonObject();
+        if (startLocation != null) {
+            json.put(JsonAttributes.START_LOCATION.attributeName, startLocation.toJson());
+        }
+
+        return json.put(JsonAttributes.MIN_DISTANCE.attributeName, minDistance)
+                   .put(JsonAttributes.MAX_DISTANCE.attributeName, maxDistance);
     }
 
     /**
