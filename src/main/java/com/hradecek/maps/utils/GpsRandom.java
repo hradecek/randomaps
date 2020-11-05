@@ -35,7 +35,7 @@ public class GpsRandom extends Random {
     /**
      * Random latitude and longitude.
      *
-     * @return
+     * @return random location
      */
     public LatLng nextLatLng() {
         var latitude = (Math.random() * 180.0) - 90.0;
@@ -53,7 +53,21 @@ public class GpsRandom extends Random {
      * @return random location
      */
     public LatLng nextLatLng(LatLng base, double minDistance, double maxDistance) {
+        assertDistances(minDistance, maxDistance);
         return nextLatLng(base, minDistance, maxDistance, nextInt(360));
+    }
+
+    private static void assertDistances(double minDistance, double maxDistance) {
+        if (minDistance > maxDistance) {
+            throw new IllegalArgumentException("'minDistance' must be bigger than 'maxDistance'");
+        }
+        assertGreaterThanZero(minDistance, "'minDistance' must be positive number");
+    }
+
+    private static void assertGreaterThanZero(double number, final String msg) {
+        if (number < 0) {
+            throw new IllegalArgumentException(msg);
+        }
     }
 
     /**

@@ -75,12 +75,30 @@ public class LatLng {
     }
 
     /**
+     * Get latitude in radians.
+     *
+     * @return latitude in radians
+     */
+    public double getLatR() {
+        return Math.toRadians(lat);
+    }
+
+    /**
      * Get longitude.
      *
      * @return longitude
      */
     public double getLng() {
         return lng;
+    }
+
+    /**
+     * Get longitude in radians.
+     *
+     * @return longitude in radians
+     */
+    public double getLngR() {
+        return Math.toRadians(lng);
     }
 
     /**
