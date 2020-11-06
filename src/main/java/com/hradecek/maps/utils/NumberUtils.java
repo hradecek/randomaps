@@ -1,6 +1,6 @@
 package com.hradecek.maps.utils;
 
-import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.DoublePredicate;
 
  /**
@@ -19,11 +19,11 @@ public class NumberUtils {
       * @return converted double or
       *         {@code Optional.empty()} if {@code string} cannot be converted
       */
-    public static Optional<Double> stringToDouble(final String string) {
+    public static OptionalDouble stringToDouble(final String string) {
         try {
-            return Optional.of(Double.valueOf(string));
+            return OptionalDouble.of(Double.parseDouble(string));
         } catch (NumberFormatException ex) {
-            return Optional.empty();
+            return OptionalDouble.empty();
         }
     }
 
@@ -35,13 +35,9 @@ public class NumberUtils {
       * @return converted double or
       *         {@code Optional.empty()} if {@code string} cannot be converted or {@code predicate} does not hold
       */
-     public static Optional<Double> stringToDouble(final String string, DoublePredicate predicate) {
-         try {
-             double value = Double.parseDouble(string);
-             return predicate.test(value) ? Optional.of(value) : Optional.empty();
-         } catch (NumberFormatException ex) {
-             return Optional.empty();
-         }
+     public static OptionalDouble stringToDouble(final String string, DoublePredicate predicate) {
+         final var converted = stringToDouble(string);
+         return converted.isPresent() && predicate.test(converted.getAsDouble()) ? converted : OptionalDouble.empty();
      }
 
      /**
