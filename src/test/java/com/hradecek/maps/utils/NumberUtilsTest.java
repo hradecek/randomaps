@@ -14,7 +14,12 @@ import static org.hamcrest.Matchers.is;
 /**
  * Unit tests for utility class {@link NumberUtils}.
  */
-public class NumberUtilsTest {
+public class NumberUtilsTest extends UtilsClassUnitTest<NumberUtils> {
+
+    @Override
+    protected Class<NumberUtils> getUtilityClass() {
+        return NumberUtils.class;
+    }
 
     @ParameterizedTest
     @MethodSource("validDoubleStrings")

@@ -2,19 +2,22 @@ package com.hradecek.maps.utils;
 
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import static com.hradecek.maps.AssertionsUtils.assertPrivateConstructor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
  * Unit tests for {@link GpsUtils}.
  */
-public class GpsUtilsTests {
+public class GpsUtilsTests extends UtilsClassUnitTest<GpsUtils> {
+
+    @Override
+    protected Class<GpsUtils> getUtilityClass() {
+        return GpsUtils.class;
+    }
 
     @ParameterizedTest
     @MethodSource("validCoordinates")
@@ -52,11 +55,6 @@ public class GpsUtilsTests {
                 Arguments.of(2000000.132),
                 Arguments.of(666)
         );
-    }
-
-    @Test
-    public void cannotInstantiate() {
-        assertPrivateConstructor(GpsUtils.class);
     }
 }
 
