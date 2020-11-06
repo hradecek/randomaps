@@ -33,7 +33,7 @@ public class DirectionsApiService extends MapsApi {
     }
 
     /**
-     * Get route from start location to end destination form of encoded polyline.
+     * Get route from start location to end destination form of encoded poly-line.
      * If there's no route error is emitted.
      *
      * @param origin start location

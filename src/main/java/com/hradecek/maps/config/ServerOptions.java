@@ -39,7 +39,7 @@ public class ServerOptions implements ConfigOptions {
     /**
      * Partial JSON config representing Server's options
      */
-    private JsonObject config;
+    private final JsonObject config;
 
     /**
      * Constructor

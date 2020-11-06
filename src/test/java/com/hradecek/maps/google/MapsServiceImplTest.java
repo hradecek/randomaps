@@ -3,8 +3,6 @@ package com.hradecek.maps.google;
 import com.hradecek.maps.types.LatLng;
 import com.hradecek.maps.types.Route;
 
-import java.io.IOException;
-
 import io.reactivex.Single;
 
 import io.vertx.core.AsyncResult;

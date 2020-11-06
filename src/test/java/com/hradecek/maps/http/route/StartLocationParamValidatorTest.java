@@ -51,7 +51,7 @@ public class StartLocationParamValidatorTest {
     @Test
     public void exactlyOneWithNonNumericLongitude() {
         final var exception = assertThrows(HttpStatusException.class,
-                                           () -> validator.validate(Collections.singletonList("-20.0102,asdf")));
+                                           () -> validator.validate(Collections.singletonList("-20.0102,NotALng")));
         assertThat(exception.getStatusCode(), equalTo(BAD_REQUEST));
     }
 

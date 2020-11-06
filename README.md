@@ -2,7 +2,7 @@
 # Randomized Maps
 
 * [Build](#build)
-  * [Requirements](requiriments)
+  * [Requirements](requirements)
 * [Run](#run)
 * [Configuration](#configuration)
 
