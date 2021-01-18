@@ -10,6 +10,8 @@ import com.hradecek.maps.types.RouteParams;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.web.RoutingContext;
 
@@ -17,6 +19,8 @@ import io.vertx.reactivex.ext.web.RoutingContext;
  * Represents '/route' endpoint.
  */
 public class RouteEndpoint extends RestV1Endpoint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RouteEndpoint.class);
 
     private static final String JSON_KEY_ROUTE = "route";
     private static final String ROUTE_QUERY_START_LOCATION = "startLocation";
@@ -52,6 +56,7 @@ public class RouteEndpoint extends RestV1Endpoint {
     public void handle(RoutingContext context) {
         randomMapService.rxRoute(createRouteParams(context))
                         .flatMapCompletable(route -> createHttpJsonResponse(context).rxEnd(routeToBuffer(route)))
+                        .doOnError(error -> LOGGER.error("Cannot handle /route.", error))
                         .subscribe(() -> {}, context::fail);
     }
 

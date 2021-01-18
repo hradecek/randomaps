@@ -1,3 +1,6 @@
+# Config file - may contain API keys etc.
+conf/config.json
+
 # IDE files
 .idea/
 *.iml

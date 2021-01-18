@@ -53,7 +53,7 @@ public class GoogleApiOptions implements ConfigOptions {
         } else if (config.containsKey(ENV_API_KEY) && !config.getString(ENV_API_KEY).isEmpty()) {
             api = config.getString(ENV_API_KEY);
         } else {
-            throw new ConfigException("No Google API Key has been defined: See ...");
+            throw new ConfigException("No Google API Key has been defined.");
         }
 
         return new JsonObject().put(JSON_API_KEY, api);
