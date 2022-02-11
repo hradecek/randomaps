@@ -28,7 +28,7 @@
     <vertx.generated.directory>${project.basedir}/src/main/generated</vertx.generated.directory>
     <version.java>11</version.java>
     <!-- Vert.x -->
-    <version.vertx>3.9.0</version.vertx>
+    <version.vertx>3.9.4</version.vertx>
     <!-- Apache Commons -->
     <version.commons.lang>3.7</version.commons.lang>
     <!-- Google maps -->
