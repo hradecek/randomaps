@@ -30,7 +30,7 @@
     <!-- Vert.x -->
     <version.vertx>3.9.0</version.vertx>
     <!-- Apache Commons -->
-    <version.commons.lang>3.7</version.commons.lang>
+    <version.commons.lang>3.18.0</version.commons.lang>
     <!-- Google maps -->
     <version.google.maps>0.15.0</version.google.maps>
     <!-- Logging -->
